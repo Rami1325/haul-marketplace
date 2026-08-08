@@ -29,6 +29,15 @@ export const PriceLineKind = {
   Protection: 'protection',
   Promo: 'promo',
   Adjustment: 'adjustment',
+  /**
+   * Absorbs the difference when the gross total is rounded to a clean figure.
+   *
+   * A locked price of ₪247.83 reads as machine output; ₪250 reads as a price.
+   * The rounding has to live on the net side as a real line, or the breakdown
+   * stops summing to the total — and a receipt that does not add up is exactly
+   * the failure this product exists to prevent.
+   */
+  Rounding: 'rounding',
 } as const;
 export type PriceLineKind = (typeof PriceLineKind)[keyof typeof PriceLineKind];
 export const PriceLineKindSchema = z.enum([
@@ -43,6 +52,7 @@ export const PriceLineKindSchema = z.enum([
   PriceLineKind.Protection,
   PriceLineKind.Promo,
   PriceLineKind.Adjustment,
+  PriceLineKind.Rounding,
 ]);
 
 export const PriceLineSchema = z.object({

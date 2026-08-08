@@ -152,6 +152,12 @@ export interface ManifestTotals {
   readonly heaviestItemKg: number;
   readonly requiresTwoPeople: boolean;
   readonly hasCraneCandidate: boolean;
+  /**
+   * Volume of items that realistically will not go down an Israeli stairwell.
+   * This is what actually gets hoisted, and what the crane is priced against —
+   * not the whole load.
+   */
+  readonly craneCandidateVolumeM3: number;
   readonly heavyItemKeys: readonly string[];
 }
 
@@ -171,6 +177,7 @@ export function summariseManifest(
   let heaviestItemKg = 0;
   let requiresTwoPeople = false;
   let hasCraneCandidate = false;
+  let craneCandidateVolumeM3 = 0;
   const heavyItemKeys: string[] = [];
   const unknownItemIds: string[] = [];
   const distinct = new Set<string>();
@@ -188,7 +195,10 @@ export function summariseManifest(
     baseHandlingMinutes += item.handlingMinutes * line.quantity;
     if (item.weightKg > heaviestItemKg) heaviestItemKg = item.weightKg;
     if (item.requiresTwoPeople) requiresTwoPeople = true;
-    if (item.craneCandidate) hasCraneCandidate = true;
+    if (item.craneCandidate) {
+      hasCraneCandidate = true;
+      craneCandidateVolumeM3 += item.volumeM3 * line.quantity;
+    }
     if (item.heavyItemSurchargeKey) {
       for (let i = 0; i < line.quantity; i++) heavyItemKeys.push(item.heavyItemSurchargeKey);
     }
@@ -203,6 +213,7 @@ export function summariseManifest(
     heaviestItemKg: Math.round(heaviestItemKg),
     requiresTwoPeople,
     hasCraneCandidate,
+    craneCandidateVolumeM3: round2(craneCandidateVolumeM3),
     heavyItemKeys,
     unknownItemIds,
   };
