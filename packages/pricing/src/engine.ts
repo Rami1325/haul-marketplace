@@ -71,6 +71,8 @@ export interface ScheduleInput {
   isCholHaMoed: boolean;
   /** Jerusalem local hour, for the evening factor. */
   localHour: number;
+  /** Calendar month 1–12, for the seasonal factor. */
+  month: number;
 }
 
 export interface PromoInput {
@@ -275,15 +277,19 @@ export function computeQuote(
   // --- fixed: crane, heavy items, extra stops -------------------------------
   for (const { stopIndex, assessment } of pricedCranes) {
     const stop = input.stops[stopIndex];
-    const floor = Math.max(0, stop?.access.floor ?? 0);
+    const crane = priceCrane(
+      Math.max(0, stop?.access.floor ?? 0),
+      assessment.volumeM3,
+      card,
+    );
     drafts.push({
       kind: PriceLineKind.Crane,
       key: `crane.${stopIndex}`,
       labelHe: 'מנוף',
       labelEn: 'Furniture crane',
-      detailHe: assessment.reasonHe,
-      detailEn: assessment.reasonEn,
-      amount: card.craneBase + floor * card.cranePerFloor,
+      detailHe: `${assessment.reasonHe} · ${formatHours(crane.hours)}`,
+      detailEn: `${assessment.reasonEn} · ${formatHours(crane.hours)}`,
+      amount: crane.amount,
       scalable: false,
     });
   }
@@ -324,8 +330,11 @@ export function computeQuote(
 
   // --- multipliers ----------------------------------------------------------
   const timeFactor = resolveTimeFactor(input.schedule, card);
+  const seasonalFactor = resolveSeasonalFactor(input.schedule, card);
   const demandFactor = clampDemandFactor(input.demandFactorBps, card.maxDemandFactorBps);
-  const combinedFactor = bps(Math.round((timeFactor * demandFactor) / 10_000));
+  const combinedFactor = bps(
+    Math.round((timeFactor * seasonalFactor * demandFactor) / 100_000_000),
+  );
 
   const scalableTotal = drafts
     .filter((d) => d.scalable)
@@ -467,6 +476,7 @@ export function computeQuote(
       dayKind: input.schedule.dayKind,
       isCholHaMoed: input.schedule.isCholHaMoed,
       localHour: input.schedule.localHour,
+      month: input.schedule.month,
       demandFactorBps: input.demandFactorBps ?? 10_000,
       promo: input.promo ?? null,
       protectionTierId: input.protectionTierId ?? null,
@@ -511,6 +521,35 @@ export function resolveTimeFactor(schedule: ScheduleInput, card: RateCard): numb
     return card.timeFactorBps['evening'];
   }
   return card.timeFactorBps[schedule.dayKind] ?? 10_000;
+}
+
+export function resolveSeasonalFactor(schedule: ScheduleInput, card: RateCard): number {
+  return card.seasonalFactorBps[String(schedule.month)] ?? 10_000;
+}
+
+/**
+ * Crane cost for one stop: floor band → call-out covering the first hour, then
+ * prorated hours beyond it. Matches how Israeli crane operators actually bill.
+ */
+export function priceCrane(
+  floor: number,
+  volumeM3: number,
+  card: RateCard,
+): { amount: number; hours: number; bandMaxFloor: number } {
+  const bands = [...card.craneBands].sort((a, b) => a.maxFloor - b.maxFloor);
+  const band = bands.find((b) => floor <= b.maxFloor) ?? bands[bands.length - 1]!;
+
+  const rawHours = volumeM3 / card.craneVolumePerHourM3;
+  const hours = Math.max(band.minimumHours, rawHours);
+  // The call-out covers the first hour; everything after it is prorated rather
+  // than rounded up, which is what operators quote.
+  const amount = band.callOut + Math.max(0, hours - 1) * band.perHour;
+
+  return { amount: Math.round(amount), hours: Math.round(hours * 10) / 10, bandMaxFloor: band.maxFloor };
+}
+
+function formatHours(hours: number): string {
+  return hours === 1 ? 'שעה' : `${hours} שע׳`;
 }
 
 function clampDemandFactor(requested: Bps | undefined, cap: Bps): number {

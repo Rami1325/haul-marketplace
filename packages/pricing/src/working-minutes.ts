@@ -40,7 +40,7 @@ export interface StopWorkInput {
 }
 
 export interface WorkingMinutesInput {
-  totals: Pick<ManifestTotals, 'baseHandlingMinutes' | 'totalVolumeM3'>;
+  totals: Pick<ManifestTotals, 'baseHandlingMinutes' | 'totalVolumeM3' | 'itemCount'>;
   stops: readonly StopWorkInput[];
   /** Total people working, driver included. The catalog is calibrated to two. */
   crewSize: number;
@@ -51,8 +51,10 @@ export interface WorkingMinutesBreakdown {
   fixedOverhead: number;
   /** Parking, finding the entrance, the lift, the door — per stop. */
   stopOverhead: number;
-  /** Carrying the items themselves, load and unload. */
+  /** Carrying the items themselves, load and unload, after batching. */
   handling: number;
+  /** Batching efficiency applied to handling. 1.0 = no benefit. */
+  bulkFactor: number;
   stairs: number;
   elevator: number;
   longCarry: number;
@@ -83,14 +85,34 @@ export function crewFactorFor(crewSize: number, exponent: number): number {
   return Math.pow(2 / safeCrew, exponent);
 }
 
+/**
+ * Batching efficiency. One item alone gets no benefit; a whole flat gets a lot.
+ *
+ * The catalog times each item as though handled in isolation. A crew moving 55
+ * boxes does not spend 55 × the single-box time — they carry several at once
+ * and chain-pass. Modelled as exponential decay toward a floor rather than a
+ * step, because the effect is gradual and a cliff would make two nearly
+ * identical manifests price very differently.
+ */
+export function bulkFactorFor(itemCount: number, floor: number, scale: number): number {
+  if (itemCount <= 1) return 1;
+  return floor + (1 - floor) * Math.exp(-(itemCount - 1) / scale);
+}
+
 export function estimateWorkingMinutes(
   input: WorkingMinutesInput,
   card: RateCard,
 ): WorkingMinutesBreakdown {
   const config = card.workingMinutes;
 
+  const bulkFactor = bulkFactorFor(
+    input.totals.itemCount,
+    config.bulkEfficiencyFloor,
+    config.bulkEfficiencyScale,
+  );
+
   // Carrying everything out, then carrying it all back in again.
-  const handling = input.totals.baseHandlingMinutes * (1 + config.unloadFactor);
+  const handling = input.totals.baseHandlingMinutes * (1 + config.unloadFactor) * bulkFactor;
 
   let stairs = 0;
   let elevator = 0;
@@ -149,6 +171,7 @@ export function estimateWorkingMinutes(
     fixedOverhead,
     stopOverhead,
     handling: round1(handling),
+    bulkFactor: Math.round(bulkFactor * 1000) / 1000,
     stairs: round1(stairs),
     elevator: round1(elevator),
     longCarry: round1(longCarry),

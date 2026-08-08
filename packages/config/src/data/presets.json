@@ -1,0 +1,359 @@
+[
+  {
+    "id": "studio_unit",
+    "nameHe": "דירת סטודיו / יחידת דיור",
+    "nameEn": "Studio / one-room unit",
+    "descriptionHe": "בערך 20 פריטים · מסחרית",
+    "descriptionEn": "About 20 items · van",
+    "icon": "studio",
+    "sortOrder": 1,
+    "lines": [
+      {
+        "catalogItemId": "bed_double_frame",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "mattress_double",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "nightstand",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "wardrobe_3_door",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "sofa_3_seat",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "tv_55",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "fridge_large",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "washing_machine",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "box_medium",
+        "quantity": 12
+      }
+    ]
+  },
+  {
+    "id": "apartment_2_rooms",
+    "nameHe": "דירת 2 חדרים",
+    "nameEn": "2-room apartment (1 bedroom)",
+    "descriptionHe": "בערך 35 פריטים · מסחרית",
+    "descriptionEn": "About 35 items · van",
+    "icon": "apartment-2",
+    "sortOrder": 2,
+    "lines": [
+      {
+        "catalogItemId": "sofa_3_seat",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "tv_55",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "living_bookshelf",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "dining_table_6_seat",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "dining_chair",
+        "quantity": 4
+      },
+      {
+        "catalogItemId": "bed_double_frame",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "mattress_double",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "nightstand",
+        "quantity": 2
+      },
+      {
+        "catalogItemId": "wardrobe_3_door",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "chest_of_drawers",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "fridge_large",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "washing_machine",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "ac_split_indoor",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "box_medium",
+        "quantity": 18
+      }
+    ]
+  },
+  {
+    "id": "apartment_3_rooms",
+    "nameHe": "דירת 3 חדרים",
+    "nameEn": "3-room apartment (2 bedrooms)",
+    "descriptionHe": "בערך 55 פריטים · משאית 4 טון",
+    "descriptionEn": "About 55 items · 4-tonne truck",
+    "icon": "apartment-3",
+    "sortOrder": 3,
+    "lines": [
+      {
+        "catalogItemId": "sofa_3_seat",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "tv_55",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "living_bookshelf",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "dining_table_6_seat",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "dining_chair",
+        "quantity": 6
+      },
+      {
+        "catalogItemId": "bed_double_frame",
+        "quantity": 2
+      },
+      {
+        "catalogItemId": "mattress_double",
+        "quantity": 2
+      },
+      {
+        "catalogItemId": "nightstand",
+        "quantity": 2
+      },
+      {
+        "catalogItemId": "wardrobe_3_door",
+        "quantity": 2
+      },
+      {
+        "catalogItemId": "chest_of_drawers",
+        "quantity": 2
+      },
+      {
+        "catalogItemId": "desk_office",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "fridge_large",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "washing_machine",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "ac_split_indoor",
+        "quantity": 2
+      },
+      {
+        "catalogItemId": "box_medium",
+        "quantity": 30
+      }
+    ]
+  },
+  {
+    "id": "apartment_4_rooms",
+    "nameHe": "דירת 4 חדרים",
+    "nameEn": "4-room apartment (3 bedrooms)",
+    "descriptionHe": "בערך 75 פריטים · משאית 8 טון",
+    "descriptionEn": "About 75 items · 8-tonne truck",
+    "icon": "apartment-4",
+    "sortOrder": 4,
+    "lines": [
+      {
+        "catalogItemId": "sofa_3_seat",
+        "quantity": 2
+      },
+      {
+        "catalogItemId": "tv_55",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "living_bookshelf",
+        "quantity": 2
+      },
+      {
+        "catalogItemId": "dining_table_6_seat",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "dining_chair",
+        "quantity": 6
+      },
+      {
+        "catalogItemId": "bed_double_frame",
+        "quantity": 3
+      },
+      {
+        "catalogItemId": "mattress_double",
+        "quantity": 3
+      },
+      {
+        "catalogItemId": "nightstand",
+        "quantity": 3
+      },
+      {
+        "catalogItemId": "wardrobe_3_door",
+        "quantity": 3
+      },
+      {
+        "catalogItemId": "chest_of_drawers",
+        "quantity": 3
+      },
+      {
+        "catalogItemId": "desk_office",
+        "quantity": 2
+      },
+      {
+        "catalogItemId": "fridge_large",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "washing_machine",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "ac_split_indoor",
+        "quantity": 3
+      },
+      {
+        "catalogItemId": "box_medium",
+        "quantity": 40
+      }
+    ]
+  },
+  {
+    "id": "apartment_5_rooms_plus",
+    "nameHe": "דירת 5 חדרים ומעלה",
+    "nameEn": "5-room apartment or larger (4+ bedrooms)",
+    "descriptionHe": "בערך 100 פריטים · משאית 8 טון",
+    "descriptionEn": "About 100 items · 8-tonne truck",
+    "icon": "apartment-5-plus",
+    "sortOrder": 5,
+    "lines": [
+      {
+        "catalogItemId": "sofa_3_seat",
+        "quantity": 2
+      },
+      {
+        "catalogItemId": "tv_55",
+        "quantity": 2
+      },
+      {
+        "catalogItemId": "living_bookshelf",
+        "quantity": 3
+      },
+      {
+        "catalogItemId": "dining_table_6_seat",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "dining_chair",
+        "quantity": 8
+      },
+      {
+        "catalogItemId": "bed_double_frame",
+        "quantity": 4
+      },
+      {
+        "catalogItemId": "mattress_double",
+        "quantity": 4
+      },
+      {
+        "catalogItemId": "nightstand",
+        "quantity": 4
+      },
+      {
+        "catalogItemId": "wardrobe_3_door",
+        "quantity": 4
+      },
+      {
+        "catalogItemId": "chest_of_drawers",
+        "quantity": 4
+      },
+      {
+        "catalogItemId": "desk_office",
+        "quantity": 2
+      },
+      {
+        "catalogItemId": "fridge_large",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "washing_machine",
+        "quantity": 1
+      },
+      {
+        "catalogItemId": "ac_split_indoor",
+        "quantity": 4
+      },
+      {
+        "catalogItemId": "box_medium",
+        "quantity": 55
+      }
+    ]
+  },
+  {
+    "id": "single_large_item",
+    "nameHe": "פריט אחד גדול",
+    "nameEn": "One large item",
+    "descriptionHe": "פריט אחד · טנדר או מסחרית",
+    "descriptionEn": "A single item · pickup or van",
+    "icon": "sofa",
+    "sortOrder": 6,
+    "lines": [
+      {
+        "catalogItemId": "sofa_3_seat",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "some_boxes",
+    "nameHe": "כמה ארגזים",
+    "nameEn": "Just some boxes",
+    "descriptionHe": "בערך 10 ארגזים · מסחרית קטנה",
+    "descriptionEn": "About 10 boxes · small van",
+    "icon": "boxes",
+    "sortOrder": 7,
+    "lines": [
+      {
+        "catalogItemId": "box_medium",
+        "quantity": 10
+      }
+    ]
+  }
+]

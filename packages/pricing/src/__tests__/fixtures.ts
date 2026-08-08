@@ -44,8 +44,13 @@ export const TEST_RATE_CARD: RateCard = RateCardSchema.parse({
   freeCarryMeters: 20,
   hardParkingFee: shekels(40),
 
-  craneBase: shekels(450),
-  cranePerFloor: shekels(40),
+  craneBands: [
+    { maxFloor: 6, callOut: shekels(500), perHour: shekels(500), minimumHours: 1 },
+    { maxFloor: 10, callOut: shekels(600), perHour: shekels(800), minimumHours: 1 },
+    { maxFloor: 99, callOut: shekels(900), perHour: shekels(1400), minimumHours: 2 },
+  ],
+  craneVolumePerHourM3: 4,
+  cranePillarBuildingFloorBonus: 1,
 
   heavyItemSurcharges: {
     piano_upright: shekels(600),
@@ -63,6 +68,11 @@ export const TEST_RATE_CARD: RateCard = RateCardSchema.parse({
     evening: bps(11_000),
   },
   eveningFromHour: 18,
+  seasonalFactorBps: {
+    '1': bps(9_500), '2': bps(9_500), '3': bps(10_000), '4': bps(10_500),
+    '5': bps(10_500), '6': bps(11_500), '7': bps(12_500), '8': bps(12_500),
+    '9': bps(11_500), '10': bps(10_000), '11': bps(9_800), '12': bps(9_500),
+  },
   maxDemandFactorBps: bps(13_000),
 
   minimumFare: shekels(250),
@@ -92,6 +102,8 @@ export const TEST_RATE_CARD: RateCard = RateCardSchema.parse({
     perStopOverheadMinutes: 8,
     unloadFactor: 0.85,
     crewScalingExponent: 0.8,
+    bulkEfficiencyFloor: 0.46,
+    bulkEfficiencyScale: 14,
     stairMinutesPerFlightPerM3: 2.4,
     elevatorMinutesPerM3: 1.1,
     carryMinutesPer10mPerM3: 1.6,
@@ -186,4 +198,5 @@ export const WORKDAY_SCHEDULE = {
   dayKind: 'workday' as const,
   isCholHaMoed: false,
   localHour: 10,
+  month: 3,
 };
