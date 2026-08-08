@@ -19,8 +19,17 @@ import { AgorotSchema } from './money.js';
 export const LedgerAccount = {
   /** Money owed by the customer. Debited when we capture. */
   CustomerReceivable: 'customer_receivable',
-  /** Cash held at the payment provider. */
-  ProviderClearing: 'provider_clearing',
+  /**
+   * Cash captured but not yet deposited by the PSP.
+   *
+   * Distinct from the bank account on purpose. In Israel the acquiring rail and
+   * the payout rail are two different systems — cards come in through PayPlus
+   * or HYP, driver payments go out through the bank — so money genuinely sits
+   * in two places and collapsing them hides the float.
+   */
+  PspClearing: 'psp_clearing',
+  /** HAUL's own bank account. Driver payouts leave from here, not from the PSP. */
+  BankAccount: 'bank_account',
   /** Our take. */
   PlatformRevenue: 'platform_revenue',
   /** Owed to the driver, until payout clears. */
@@ -43,7 +52,8 @@ export const LedgerAccount = {
 export type LedgerAccount = (typeof LedgerAccount)[keyof typeof LedgerAccount];
 export const LedgerAccountSchema = z.enum([
   LedgerAccount.CustomerReceivable,
-  LedgerAccount.ProviderClearing,
+  LedgerAccount.PspClearing,
+  LedgerAccount.BankAccount,
   LedgerAccount.PlatformRevenue,
   LedgerAccount.DriverPayable,
   LedgerAccount.VatPayable,
@@ -59,6 +69,8 @@ export const LedgerEventKind = {
   Authorization: 'authorization',
   AuthorizationReleased: 'authorization_released',
   Capture: 'capture',
+  /** PSP deposits cleared funds into the bank, net of processing fees. */
+  PspDeposit: 'psp_deposit',
   CancellationFee: 'cancellation_fee',
   Refund: 'refund',
   DriverPayout: 'driver_payout',
@@ -73,6 +85,7 @@ export const LedgerEventKindSchema = z.enum([
   LedgerEventKind.Authorization,
   LedgerEventKind.AuthorizationReleased,
   LedgerEventKind.Capture,
+  LedgerEventKind.PspDeposit,
   LedgerEventKind.CancellationFee,
   LedgerEventKind.Refund,
   LedgerEventKind.DriverPayout,

@@ -12,12 +12,49 @@ import {
   isTerminal,
   moneyEffectFor,
   transitionsFrom,
+  type Transition,
 } from '../job-state.js';
+
+/**
+ * Every simple (non-repeating) path through the machine from a starting state.
+ * The graph is small and acyclic in practice, so full enumeration is cheap and
+ * lets structural money invariants be checked over routes rather than edges.
+ */
+function allSimplePathsFrom(start: JobState): Transition[][] {
+  const paths: Transition[][] = [];
+
+  const walk = (state: JobState, visited: Set<JobState>, soFar: Transition[]) => {
+    const outgoing = transitionsFrom(state);
+    if (outgoing.length === 0) {
+      if (soFar.length > 0) paths.push([...soFar]);
+      return;
+    }
+    let advanced = false;
+    for (const transition of outgoing) {
+      if (visited.has(transition.to)) continue;
+      advanced = true;
+      visited.add(transition.to);
+      soFar.push(transition);
+      walk(transition.to, visited, soFar);
+      soFar.pop();
+      visited.delete(transition.to);
+    }
+    if (!advanced && soFar.length > 0) paths.push([...soFar]);
+  };
+
+  walk(start, new Set([start]), []);
+  return paths;
+}
+
+function describePath(path: Transition[]): string {
+  return [path[0]?.from, ...path.map((t) => t.to)].join(' → ');
+}
 
 /** A context where every guard passes, so tests opt *out* of readiness explicitly. */
 function readyContext(actor: Actor, overrides: Record<string, unknown> = {}) {
   return defaultTransitionContext({
     actor,
+    paymentMethodSecured: true,
     paymentAuthorized: true,
     hasLoadProof: true,
     hasUnloadProof: true,
@@ -33,7 +70,7 @@ function readyContext(actor: Actor, overrides: Record<string, unknown> = {}) {
 describe('the happy path', () => {
   it('walks quoted → settled', () => {
     const steps: Array<[JobState, JobEvent, Actor, JobState]> = [
-      [JobState.Quoted, JobEvent.Book, Actor.Customer, JobState.Matching],
+      [JobState.Quoted, JobEvent.BookNow, Actor.Customer, JobState.Matching],
       [JobState.Matching, JobEvent.DriverAccept, Actor.Driver, JobState.Accepted],
       [JobState.Accepted, JobEvent.StartTrip, Actor.Driver, JobState.EnRoute],
       [JobState.EnRoute, JobEvent.ArriveAtPickup, Actor.Driver, JobState.Loading],
@@ -52,7 +89,7 @@ describe('the happy path', () => {
 
 describe('money moves at exactly three points', () => {
   it('authorizes at booking', () => {
-    expect(moneyEffectFor(JobState.Quoted, JobEvent.Book)).toBe(MoneyEffect.Authorize);
+    expect(moneyEffectFor(JobState.Quoted, JobEvent.BookNow)).toBe(MoneyEffect.Authorize);
   });
 
   it('captures at completion', () => {
@@ -69,9 +106,54 @@ describe('money moves at exactly three points', () => {
     expect(captures).toHaveLength(1);
   });
 
-  it('authorizes on exactly one edge', () => {
-    const authorizations = TRANSITIONS.filter((t) => t.money === MoneyEffect.Authorize);
-    expect(authorizations).toHaveLength(1);
+  it('authorizes at most once along any single route through the machine', () => {
+    // There are two Authorize edges — one for on-demand bookings, one for the
+    // deferred hold on scheduled jobs — but they sit on mutually exclusive
+    // paths. Counting edges would be the wrong check; what actually matters is
+    // that no job can ever be held twice. So walk every simple path and count.
+    const authorizeEdges = TRANSITIONS.filter((t) => t.money === MoneyEffect.Authorize);
+    expect(authorizeEdges.length).toBeGreaterThan(1);
+
+    for (const path of allSimplePathsFrom(JobState.Quoted)) {
+      const authorizations = path.filter((t) => t.money === MoneyEffect.Authorize);
+      expect(
+        authorizations.length,
+        `path ${describePath(path)} authorizes ${authorizations.length} times`,
+      ).toBeLessThanOrEqual(1);
+    }
+  });
+
+  it('captures at most once along any single route through the machine', () => {
+    for (const path of allSimplePathsFrom(JobState.Quoted)) {
+      const captures = path.filter(
+        (t) =>
+          t.money === MoneyEffect.Capture || t.money === MoneyEffect.CaptureCancellationFee,
+      );
+      expect(
+        captures.length,
+        `path ${describePath(path)} takes the customer's money ${captures.length} times`,
+      ).toBeLessThanOrEqual(1);
+    }
+  });
+
+  it('never captures without having authorized first', () => {
+    for (const path of allSimplePathsFrom(JobState.Quoted)) {
+      let authorized = false;
+      for (const step of path) {
+        if (step.money === MoneyEffect.Authorize) authorized = true;
+        if (
+          step.money === MoneyEffect.Capture ||
+          step.money === MoneyEffect.CaptureCancellationFee
+        ) {
+          expect(authorized, `path ${describePath(path)} captures before authorizing`).toBe(true);
+        }
+      }
+    }
+  });
+
+  it('defers the hold on a scheduled booking and places it when dispatch opens', () => {
+    expect(moneyEffectFor(JobState.Quoted, JobEvent.BookScheduled)).toBeNull();
+    expect(moneyEffectFor(JobState.Scheduled, JobEvent.OpenDispatch)).toBe(MoneyEffect.Authorize);
   });
 
   it('releases the hold in full whenever no driver ever committed', () => {
@@ -89,11 +171,80 @@ describe('money moves at exactly three points', () => {
   });
 });
 
+describe('the scheduled path', () => {
+  it('walks quoted → scheduled → matching', () => {
+    const booked = attemptTransition(
+      JobState.Quoted,
+      JobEvent.BookScheduled,
+      readyContext(Actor.Customer, { paymentAuthorized: false }),
+    );
+    expect(booked).toMatchObject({ ok: true, to: JobState.Scheduled, money: null });
+
+    const opened = attemptTransition(
+      JobState.Scheduled,
+      JobEvent.OpenDispatch,
+      readyContext(Actor.System),
+    );
+    expect(opened).toMatchObject({ ok: true, to: JobState.Matching });
+  });
+
+  it('books a future job on a tokenised card with no hold placed', () => {
+    // The whole point of the deferred hold: a validated card is enough to book.
+    const result = attemptTransition(
+      JobState.Quoted,
+      JobEvent.BookScheduled,
+      readyContext(Actor.Customer, { paymentAuthorized: false }),
+    );
+    expect(result).toMatchObject({ ok: true });
+  });
+
+  it('still refuses to book without a card on file', () => {
+    const result = attemptTransition(
+      JobState.Quoted,
+      JobEvent.BookScheduled,
+      readyContext(Actor.Customer, { paymentMethodSecured: false, paymentAuthorized: false }),
+    );
+    expect(result).toMatchObject({ ok: false, code: TransitionErrorCode.GuardFailed });
+    if (!result.ok) expect(result.reason).toMatch(/card/);
+  });
+
+  it('will not open dispatch until the hold is actually placed', () => {
+    // A failure here happens 24 hours out, which is the entire point — it
+    // leaves a day to reach the customer instead of surfacing on the doorstep.
+    const result = attemptTransition(
+      JobState.Scheduled,
+      JobEvent.OpenDispatch,
+      readyContext(Actor.System, { paymentAuthorized: false }),
+    );
+    expect(result).toMatchObject({ ok: false, code: TransitionErrorCode.GuardFailed });
+  });
+
+  it('cancels a scheduled job for free', () => {
+    const result = attemptTransition(
+      JobState.Scheduled,
+      JobEvent.CancelBeforeMatch,
+      readyContext(Actor.Customer),
+    );
+    expect(result).toMatchObject({ ok: true, to: JobState.Cancelled, money: MoneyEffect.Release });
+  });
+
+  it('does not let a customer skip the hold by booking a scheduled job for now', () => {
+    // BookScheduled must not be a back door into Matching without a hold.
+    const result = attemptTransition(
+      JobState.Quoted,
+      JobEvent.BookScheduled,
+      readyContext(Actor.Customer, { paymentAuthorized: false }),
+    );
+    expect(result).toMatchObject({ ok: true, to: JobState.Scheduled });
+    expect(result.ok && result.to).not.toBe(JobState.Matching);
+  });
+});
+
 describe('guards', () => {
   it('will not dispatch without an authorized card', () => {
     const result = attemptTransition(
       JobState.Quoted,
-      JobEvent.Book,
+      JobEvent.BookNow,
       readyContext(Actor.Customer, { paymentAuthorized: false }),
     );
     expect(result).toMatchObject({ ok: false, code: TransitionErrorCode.GuardFailed });
@@ -102,7 +253,7 @@ describe('guards', () => {
   it('will not book an expired quote', () => {
     const result = attemptTransition(
       JobState.Quoted,
-      JobEvent.Book,
+      JobEvent.BookNow,
       readyContext(Actor.Customer, {
         now: new Date('2026-01-02T00:00:00Z'),
         quoteExpiresAt: new Date('2026-01-01T00:00:00Z'),
@@ -240,7 +391,7 @@ describe('illegal transitions', () => {
       JobState.NoMatch,
       JobState.Expired,
     ] as const) {
-      const result = attemptTransition(state, JobEvent.Book, readyContext(Actor.Ops));
+      const result = attemptTransition(state, JobEvent.BookNow, readyContext(Actor.Ops));
       expect(result).toMatchObject({ ok: false, code: TransitionErrorCode.AlreadyTerminal });
     }
   });
@@ -248,7 +399,7 @@ describe('illegal transitions', () => {
   it('cannot re-book a job that is already matching', () => {
     const result = attemptTransition(
       JobState.Matching,
-      JobEvent.Book,
+      JobEvent.BookNow,
       readyContext(Actor.Customer),
     );
     expect(result).toMatchObject({ ok: false, code: TransitionErrorCode.NoSuchTransition });

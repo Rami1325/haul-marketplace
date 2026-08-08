@@ -24,6 +24,16 @@ export const JobState = {
   Quoted: 'quoted',
   /** Quote lapsed before booking. Terminal. Re-quote required. */
   Expired: 'expired',
+  /**
+   * Booked for a future window, card tokenised, no hold placed yet.
+   *
+   * This state exists because of an Israeli payments constraint. Local PSPs
+   * hold a J5 authorization for days, not weeks, but roughly seven in ten moves
+   * are booked further ahead than that. So a scheduled job keeps a validated
+   * card on file — which is what the fraud filter and free cancellation
+   * actually depend on — and the hold is placed shortly before dispatch opens.
+   */
+  Scheduled: 'scheduled',
   /** Card authorized, dispatch fanning the offer out in waves. */
   Matching: 'matching',
   /** A driver took it. The job is now somebody's responsibility. */
@@ -50,6 +60,7 @@ export type JobState = (typeof JobState)[keyof typeof JobState];
 export const JobStateSchema = z.enum([
   JobState.Quoted,
   JobState.Expired,
+  JobState.Scheduled,
   JobState.Matching,
   JobState.Accepted,
   JobState.EnRoute,
@@ -116,7 +127,12 @@ export const ActorSchema = z.enum([Actor.Customer, Actor.Driver, Actor.System, A
 // --- events -----------------------------------------------------------------
 
 export const JobEvent = {
-  Book: 'book',
+  /** Book for immediate dispatch. Places the hold there and then. */
+  BookNow: 'book_now',
+  /** Book a future window. Tokenises the card; the hold comes later. */
+  BookScheduled: 'book_scheduled',
+  /** T-24h: place the hold on a scheduled job and open it to dispatch. */
+  OpenDispatch: 'open_dispatch',
   ExpireQuote: 'expire_quote',
   DriverAccept: 'driver_accept',
   MatchTimeout: 'match_timeout',
@@ -162,6 +178,11 @@ export interface TransitionContext {
   readonly actor: Actor;
   readonly now: Date;
 
+  /**
+   * A real, validated card is on file — tokenised, but no hold placed. This is
+   * what removes most fraud and most no-shows; the hold is a separate concern.
+   */
+  readonly paymentMethodSecured: boolean;
   /** Card hold successfully placed. */
   readonly paymentAuthorized: boolean;
   /** Quote's hold-until timestamp. Null when not applicable. */
@@ -193,6 +214,7 @@ export function defaultTransitionContext(
 ): TransitionContext {
   return {
     now: new Date(),
+    paymentMethodSecured: false,
     paymentAuthorized: false,
     quoteExpiresAt: null,
     hasLoadProof: false,
@@ -210,6 +232,9 @@ type Guard = (ctx: TransitionContext) => string | null;
 
 const requirePaymentAuthorized: Guard = (ctx) =>
   ctx.paymentAuthorized ? null : 'payment must be authorized before dispatch';
+
+const requirePaymentSecured: Guard = (ctx) =>
+  ctx.paymentMethodSecured ? null : 'a validated card must be on file before booking';
 
 const requireQuoteNotExpired: Guard = (ctx) =>
   ctx.quoteExpiresAt && ctx.now > ctx.quoteExpiresAt ? 'quote has expired — re-quote required' : null;
@@ -258,11 +283,44 @@ export const TRANSITIONS: readonly Transition[] = [
   {
     from: JobState.Quoted,
     to: JobState.Matching,
-    event: JobEvent.Book,
+    event: JobEvent.BookNow,
     actors: [Actor.Customer, Actor.Ops],
-    guards: [requireQuoteNotExpired, requirePaymentAuthorized],
+    guards: [requireQuoteNotExpired, requirePaymentSecured, requirePaymentAuthorized],
     money: MoneyEffect.Authorize,
-    description: 'Customer books. Card is authorized for the locked amount, not charged.',
+    description: 'On-demand booking. Card is authorized for the locked amount, not charged.',
+  },
+  {
+    from: JobState.Quoted,
+    to: JobState.Scheduled,
+    event: JobEvent.BookScheduled,
+    actors: [Actor.Customer, Actor.Ops],
+    guards: [requireQuoteNotExpired, requirePaymentSecured],
+    money: null,
+    description:
+      'Future booking. Card tokenised and validated; the hold waits until dispatch opens, ' +
+      'because a local J5 authorization will not survive a two-week lead time.',
+  },
+  {
+    from: JobState.Scheduled,
+    to: JobState.Matching,
+    event: JobEvent.OpenDispatch,
+    actors: [Actor.System, Actor.Ops],
+    guards: [requirePaymentAuthorized],
+    money: MoneyEffect.Authorize,
+    description:
+      'T-24h. Hold placed and the job opens to dispatch. A failure here leaves a day to ' +
+      'reach the customer, rather than surfacing when the truck is outside.',
+  },
+  {
+    from: JobState.Scheduled,
+    to: JobState.Cancelled,
+    event: JobEvent.CancelBeforeMatch,
+    actors: [Actor.Customer, Actor.Ops],
+    guards: [],
+    // No hold exists yet, so this releases nothing. Kept as Release so the
+    // ledger path is uniform and the effect stays idempotent.
+    money: MoneyEffect.Release,
+    description: 'Free cancellation of a scheduled job. No driver committed, no hold placed.',
   },
   {
     from: JobState.Quoted,
