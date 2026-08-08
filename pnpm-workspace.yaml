@@ -2,6 +2,12 @@ packages:
   - "apps/*"
   - "packages/*"
   - "services/*"
+# esbuild's install script links the prebuilt binary for this platform. It is a
+# dev-only dependency here, pulled in by drizzle-kit and tsx, and it does not
+# ship in any deployed artifact. Nothing else is permitted to run install
+# scripts — that gate stays shut by default.
+allowBuilds:
+  esbuild: true
 minimumReleaseAgeExclude:
   - '@turbo/darwin-64@2.10.9'
   - '@turbo/darwin-arm64@2.10.9'

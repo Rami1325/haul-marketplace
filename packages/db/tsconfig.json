@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "noEmit": true,
+    "types": ["node"],
+    "resolveJsonModule": true
+  },
+  "include": ["src/**/*", "drizzle.config.ts"],
+  "exclude": ["node_modules", "dist", "migrations"]
+}

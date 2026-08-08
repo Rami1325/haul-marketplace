@@ -9,4 +9,10 @@
 
 export * from './catalog.js';
 export * from './cities/tel-aviv.js';
-export { CITIES, cityById, DEFAULT_CITY_ID, type CityConfig } from './cities/index.js';
+export {
+  CITIES,
+  TEL_AVIV_CITY,
+  cityById,
+  DEFAULT_CITY_ID,
+  type CityConfig,
+} from './cities/index.js';
