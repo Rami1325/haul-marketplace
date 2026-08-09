@@ -1,13 +1,5 @@
 import { relations, sql } from 'drizzle-orm';
-import {
-  index,
-  integer,
-  jsonb,
-  pgTable,
-  text,
-  uniqueIndex,
-  varchar,
-} from 'drizzle-orm/pg-core';
+import { index, integer, jsonb, pgTable, text, uniqueIndex, varchar } from 'drizzle-orm/pg-core';
 import { agorot, createdAt, id, timestamptz, updatedAt } from '../columns.js';
 import { drivers, users } from './identity.js';
 import { jobs } from './jobs.js';
@@ -106,7 +98,9 @@ export const paymentAuthorizations = pgTable(
     token: varchar('token', { length: 255 }).notNull(),
 
     amount: agorot('amount').notNull(),
-    capturedAmount: agorot('captured_amount').notNull().default(0 as never),
+    capturedAmount: agorot('captured_amount')
+      .notNull()
+      .default(0 as never),
     status: authorizationStatusEnum('status').notNull().default('active'),
 
     authorizedAt: timestamptz('authorized_at').notNull().defaultNow(),

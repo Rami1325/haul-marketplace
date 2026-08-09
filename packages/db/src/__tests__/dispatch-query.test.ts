@@ -19,7 +19,8 @@ import { countEligibleDrivers, findNearestAvailableDrivers } from '../queries/ne
  * ---------------------------------------------------------------------------
  */
 
-const DATABASE_URL = process.env['DATABASE_URL'] ?? 'postgresql://haul:haul_dev@localhost:5432/haul';
+const DATABASE_URL =
+  process.env['DATABASE_URL'] ?? 'postgresql://haul:haul_dev@localhost:5432/haul';
 const CITY = 'tel-aviv';
 const TLV_CENTRE = { lat: 32.0785, lng: 34.7742 };
 const BULK_PREFIX = 'bulktest';
@@ -169,7 +170,14 @@ describe.runIf(process.env['SKIP_DB'] !== '1')('the eligible-pool query', () => 
       cityId: CITY,
       pickup: TLV_CENTRE,
       radiusMeters: 20_000,
-      acceptableVehicleClasses: ['van', 'small_van', 'box_truck_4t', 'pickup', 'crane_truck', 'box_truck_8t'],
+      acceptableVehicleClasses: [
+        'van',
+        'small_van',
+        'box_truck_4t',
+        'pickup',
+        'crane_truck',
+        'box_truck_8t',
+      ],
       limit: 500,
     });
     const returned = new Set(rows.map((r) => r.driverId));
@@ -183,7 +191,9 @@ describe.runIf(process.env['SKIP_DB'] !== '1')('the eligible-pool query', () => 
     `);
 
     for (const row of excluded as unknown as Array<{ driver_id: string }>) {
-      expect(returned.has(row.driver_id), `${row.driver_id} should not be offered work`).toBe(false);
+      expect(returned.has(row.driver_id), `${row.driver_id} should not be offered work`).toBe(
+        false,
+      );
     }
   });
 

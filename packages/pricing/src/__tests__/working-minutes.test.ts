@@ -59,62 +59,98 @@ describe('the estimate responds to the things that actually cost time', () => {
   });
 
   it('charges real time for stairs', () => {
-    const flat = estimate([['box_medium', 30]], [
-      { access: access(), volumeM3: 3 },
-      { access: access(), volumeM3: 3 },
-    ]);
-    const fourth = estimate([['box_medium', 30]], [
-      { access: access({ floor: 4, stairFlights: 4 }), volumeM3: 3 },
-      { access: access(), volumeM3: 3 },
-    ]);
+    const flat = estimate(
+      [['box_medium', 30]],
+      [
+        { access: access(), volumeM3: 3 },
+        { access: access(), volumeM3: 3 },
+      ],
+    );
+    const fourth = estimate(
+      [['box_medium', 30]],
+      [
+        { access: access({ floor: 4, stairFlights: 4 }), volumeM3: 3 },
+        { access: access(), volumeM3: 3 },
+      ],
+    );
     expect(fourth.total).toBeGreaterThan(flat.total);
     expect(fourth.stairs).toBeGreaterThan(0);
   });
 
   it('treats a lift as faster than stairs but not free', () => {
-    const stairs = estimate([['box_medium', 30]], [
-      { access: access({ floor: 4, stairFlights: 4 }), volumeM3: 3 },
-      { access: access(), volumeM3: 3 },
-    ]);
-    const lift = estimate([['box_medium', 30]], [
-      { access: access({ floor: 4, stairFlights: 4, elevator: ElevatorKind.Standard }), volumeM3: 3 },
-      { access: access(), volumeM3: 3 },
-    ]);
+    const stairs = estimate(
+      [['box_medium', 30]],
+      [
+        { access: access({ floor: 4, stairFlights: 4 }), volumeM3: 3 },
+        { access: access(), volumeM3: 3 },
+      ],
+    );
+    const lift = estimate(
+      [['box_medium', 30]],
+      [
+        {
+          access: access({ floor: 4, stairFlights: 4, elevator: ElevatorKind.Standard }),
+          volumeM3: 3,
+        },
+        { access: access(), volumeM3: 3 },
+      ],
+    );
     expect(lift.total).toBeLessThan(stairs.total);
     expect(lift.stairs).toBe(0);
     expect(lift.elevator).toBeGreaterThan(0);
   });
 
   it('sees a small lift as no lift at all for furniture', () => {
-    const small = estimate([['sofa_3_seat', 1]], [
-      { access: access({ floor: 3, stairFlights: 3, elevator: ElevatorKind.Small }), volumeM3: 1.8 },
-      { access: access(), volumeM3: 1.8 },
-    ]);
-    const none = estimate([['sofa_3_seat', 1]], [
-      { access: access({ floor: 3, stairFlights: 3, elevator: ElevatorKind.None }), volumeM3: 1.8 },
-      { access: access(), volumeM3: 1.8 },
-    ]);
+    const small = estimate(
+      [['sofa_3_seat', 1]],
+      [
+        {
+          access: access({ floor: 3, stairFlights: 3, elevator: ElevatorKind.Small }),
+          volumeM3: 1.8,
+        },
+        { access: access(), volumeM3: 1.8 },
+      ],
+    );
+    const none = estimate(
+      [['sofa_3_seat', 1]],
+      [
+        {
+          access: access({ floor: 3, stairFlights: 3, elevator: ElevatorKind.None }),
+          volumeM3: 1.8,
+        },
+        { access: access(), volumeM3: 1.8 },
+      ],
+    );
     expect(small.total).toBe(none.total);
   });
 
   it('costs time for contested parking', () => {
     const easy = estimate([['box_medium', 20]], groundFloorBothEnds);
-    const hard = estimate([['box_medium', 20]], [
-      { access: access({ parking: ParkingSituation.StreetHard }), volumeM3: 3 },
-      { access: access(), volumeM3: 3 },
-    ]);
+    const hard = estimate(
+      [['box_medium', 20]],
+      [
+        { access: access({ parking: ParkingSituation.StreetHard }), volumeM3: 3 },
+        { access: access(), volumeM3: 3 },
+      ],
+    );
     expect(hard.total).toBeGreaterThan(easy.total);
   });
 
   it('costs time for a long carry beyond the free allowance', () => {
-    const near = estimate([['box_medium', 20]], [
-      { access: access({ carryDistanceMeters: 10 }), volumeM3: 3 },
-      { access: access(), volumeM3: 3 },
-    ]);
-    const far = estimate([['box_medium', 20]], [
-      { access: access({ carryDistanceMeters: 120 }), volumeM3: 3 },
-      { access: access(), volumeM3: 3 },
-    ]);
+    const near = estimate(
+      [['box_medium', 20]],
+      [
+        { access: access({ carryDistanceMeters: 10 }), volumeM3: 3 },
+        { access: access(), volumeM3: 3 },
+      ],
+    );
+    const far = estimate(
+      [['box_medium', 20]],
+      [
+        { access: access({ carryDistanceMeters: 120 }), volumeM3: 3 },
+        { access: access(), volumeM3: 3 },
+      ],
+    );
     expect(near.longCarry).toBe(0);
     expect(far.longCarry).toBeGreaterThan(0);
     expect(far.total).toBeGreaterThan(near.total);
@@ -131,7 +167,13 @@ describe('the crane trades stair time for setup time', () => {
       },
       { access: access(), volumeM3: 4 },
     ];
-    const withCrane = estimate([['sofa_3_seat', 2], ['box_medium', 4]], stops);
+    const withCrane = estimate(
+      [
+        ['sofa_3_seat', 2],
+        ['box_medium', 4],
+      ],
+      stops,
+    );
     expect(withCrane.stairs).toBe(0);
     expect(withCrane.crane).toBeGreaterThan(0);
   });
@@ -146,13 +188,22 @@ describe('the crane trades stair time for setup time', () => {
       },
       { access: access(), volumeM3: 4 },
     ];
-    const result = estimate([['sofa_3_seat', 1], ['box_medium', 22]], stops);
+    const result = estimate(
+      [
+        ['sofa_3_seat', 1],
+        ['box_medium', 22],
+      ],
+      stops,
+    );
     expect(result.stairs).toBeGreaterThan(0);
     expect(result.crane).toBeGreaterThan(0);
   });
 
   it('is worth it on a high floor and not on a low one', () => {
-    const heavyLoad: Array<[string, number]> = [['sofa_3_seat', 2], ['wardrobe_3_door', 1]];
+    const heavyLoad: Array<[string, number]> = [
+      ['sofa_3_seat', 2],
+      ['wardrobe_3_door', 1],
+    ];
     const volume = totalsFor(heavyLoad).totalVolumeM3;
 
     const highWalked = estimate(heavyLoad, [

@@ -157,7 +157,12 @@ describe('crane pricing matches quoted operator jobs', () => {
         stops: [
           {
             kind: StopKind.Pickup,
-            access: access({ floor: 5, stairFlights: 5, narrowStairwell: true, crane: CraneNeed.Required }),
+            access: access({
+              floor: 5,
+              stairFlights: 5,
+              narrowStairwell: true,
+              crane: CraneNeed.Required,
+            }),
           },
           { kind: StopKind.Dropoff, access: access({ elevator: ElevatorKind.Standard }) },
         ],
@@ -197,7 +202,12 @@ describe('crane pricing matches quoted operator jobs', () => {
         stops: [
           {
             kind: StopKind.Pickup,
-            access: access({ floor: 5, stairFlights: 5, narrowStairwell: true, crane: CraneNeed.Required }),
+            access: access({
+              floor: 5,
+              stairFlights: 5,
+              narrowStairwell: true,
+              crane: CraneNeed.Required,
+            }),
           },
           { kind: StopKind.Dropoff, access: access({ elevator: ElevatorKind.Standard }) },
         ],
@@ -217,7 +227,8 @@ describe('crane pricing matches quoted operator jobs', () => {
     );
 
     const craneGross = Math.round(
-      result.breakdown.lines.filter((l) => l.kind === 'crane').reduce((a, l) => a + l.amount, 0) * 1.18,
+      result.breakdown.lines.filter((l) => l.kind === 'crane').reduce((a, l) => a + l.amount, 0) *
+        1.18,
     );
     const message = `crane line ₪${(craneGross / 100).toFixed(0)}, operator table says ₪800–850 for 2h to floor 5`;
     expect(craneGross, message).toBeGreaterThan(70_000); // ₪700
@@ -233,7 +244,12 @@ describe('crane pricing matches quoted operator jobs', () => {
           stops: [
             {
               kind: StopKind.Pickup,
-              access: access({ floor, stairFlights: floor, narrowStairwell: true, crane: CraneNeed.Required }),
+              access: access({
+                floor,
+                stairFlights: floor,
+                narrowStairwell: true,
+                crane: CraneNeed.Required,
+              }),
             },
             { kind: StopKind.Dropoff, access: access({ elevator: ElevatorKind.Standard }) },
           ],
@@ -253,7 +269,9 @@ describe('crane pricing matches quoted operator jobs', () => {
       );
 
     const craneAt = (floor: number) =>
-      build(floor).breakdown.lines.filter((l) => l.kind === 'crane').reduce((a, l) => a + l.amount, 0);
+      build(floor)
+        .breakdown.lines.filter((l) => l.kind === 'crane')
+        .reduce((a, l) => a + l.amount, 0);
 
     // The bands are steep and discontinuous — an arm crane above the 10th is a
     // different machine with a two-hour minimum, not a taller version.
@@ -292,7 +310,9 @@ describe('seasonality is the biggest swing in the card', () => {
     const july = at(7);
     // Sources show winter quotes running 25–30% below summer for the same flat.
     const swing = july / january - 1;
-    expect(swing, `Jan ${january} vs Jul ${july} → ${(swing * 100).toFixed(0)}%`).toBeGreaterThan(0.2);
+    expect(swing, `Jan ${january} vs Jul ${july} → ${(swing * 100).toFixed(0)}%`).toBeGreaterThan(
+      0.2,
+    );
     expect(swing).toBeLessThan(0.45);
   });
 });

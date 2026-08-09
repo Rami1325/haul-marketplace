@@ -1,4 +1,9 @@
-import { TEL_AVIV, type CalendarLocation, type OperatingHours, DEFAULT_OPERATING_HOURS } from '@haul/calendar';
+import {
+  TEL_AVIV,
+  type CalendarLocation,
+  type OperatingHours,
+  DEFAULT_OPERATING_HOURS,
+} from '@haul/calendar';
 import type { RateCard } from '@haul/pricing';
 import type { Locale } from '@haul/types';
 import { TEL_AVIV_RATE_CARD } from './tel-aviv.js';
@@ -45,7 +50,14 @@ export const TEL_AVIV_CITY: CityConfig = {
     // city that half-works, and every kilometre of radius dilutes driver density.
     centre: { lat: 32.0785, lng: 34.7742 },
     radiusMeters: 4_000,
-    neighbourhoodsHe: ['לב תל אביב', 'הצפון הישן', 'פלורנטין', 'נווה צדק', 'כרם התימנים', 'מונטיפיורי'],
+    neighbourhoodsHe: [
+      'לב תל אביב',
+      'הצפון הישן',
+      'פלורנטין',
+      'נווה צדק',
+      'כרם התימנים',
+      'מונטיפיורי',
+    ],
   },
   isLive: false,
 };

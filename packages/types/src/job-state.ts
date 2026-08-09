@@ -237,7 +237,9 @@ const requirePaymentSecured: Guard = (ctx) =>
   ctx.paymentMethodSecured ? null : 'a validated card must be on file before booking';
 
 const requireQuoteNotExpired: Guard = (ctx) =>
-  ctx.quoteExpiresAt && ctx.now > ctx.quoteExpiresAt ? 'quote has expired — re-quote required' : null;
+  ctx.quoteExpiresAt && ctx.now > ctx.quoteExpiresAt
+    ? 'quote has expired — re-quote required'
+    : null;
 
 const requireLoadProof: Guard = (ctx) =>
   ctx.hasLoadProof ? null : 'load photos are required before the job can advance';
@@ -474,8 +476,7 @@ export const TransitionErrorCode = {
   GuardFailed: 'guard_failed',
   AlreadyTerminal: 'already_terminal',
 } as const;
-export type TransitionErrorCode =
-  (typeof TransitionErrorCode)[keyof typeof TransitionErrorCode];
+export type TransitionErrorCode = (typeof TransitionErrorCode)[keyof typeof TransitionErrorCode];
 
 /**
  * The only sanctioned way to move a job. Returns a result rather than throwing,

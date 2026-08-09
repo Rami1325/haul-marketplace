@@ -264,7 +264,10 @@ describe('multipliers', () => {
     // These are third-party and fixed costs. Inflating them by evening demand
     // would raise the number with no underlying cost behind it.
     const stops = [
-      { kind: StopKind.Pickup, access: access({ floor: 4, stairFlights: 4, narrowStairwell: true }) },
+      {
+        kind: StopKind.Pickup,
+        access: access({ floor: 4, stairFlights: 4, narrowStairwell: true }),
+      },
       { kind: StopKind.Dropoff, access: access() },
     ];
     const withPiano = manifest([
@@ -462,15 +465,15 @@ describe('rate card validation', () => {
   });
 
   it('rejects a take rate outside the workable band', () => {
-    expect(
-      validateRateCard({ ...TEST_RATE_CARD, driverShareBps: bps(9_000) }),
-    ).toContainEqual(expect.stringContaining('take rate'));
+    expect(validateRateCard({ ...TEST_RATE_CARD, driverShareBps: bps(9_000) })).toContainEqual(
+      expect.stringContaining('take rate'),
+    );
   });
 
   it('rejects a demand cap that would read as surge', () => {
-    expect(
-      validateRateCard({ ...TEST_RATE_CARD, maxDemandFactorBps: bps(20_000) }),
-    ).toContainEqual(expect.stringContaining('surge'));
+    expect(validateRateCard({ ...TEST_RATE_CARD, maxDemandFactorBps: bps(20_000) })).toContainEqual(
+      expect.stringContaining('surge'),
+    );
   });
 
   it('rejects a thin buffer on a locked price', () => {

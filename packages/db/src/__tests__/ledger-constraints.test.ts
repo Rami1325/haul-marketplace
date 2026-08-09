@@ -18,7 +18,8 @@ import { createClient, type Database } from '../client.js';
  * ---------------------------------------------------------------------------
  */
 
-const DATABASE_URL = process.env['DATABASE_URL'] ?? 'postgresql://haul:haul_dev@localhost:5432/haul';
+const DATABASE_URL =
+  process.env['DATABASE_URL'] ?? 'postgresql://haul:haul_dev@localhost:5432/haul';
 
 let db: Database;
 let close: () => Promise<void>;

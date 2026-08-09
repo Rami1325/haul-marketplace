@@ -183,7 +183,9 @@ export function finalDropoff(job: Pick<Job, 'stops'>): Stop {
  * number the pricing model is trying to predict, so it is measured the same way
  * every time rather than reconstructed differently in each report.
  */
-export function computeActualWorkingMinutes(job: Pick<Job, 'arrivedPickupAt' | 'completedAt'>): number | null {
+export function computeActualWorkingMinutes(
+  job: Pick<Job, 'arrivedPickupAt' | 'completedAt'>,
+): number | null {
   if (!job.arrivedPickupAt || !job.completedAt) return null;
   const ms = job.completedAt.getTime() - job.arrivedPickupAt.getTime();
   return ms <= 0 ? 0 : Math.round(ms / 60_000);
@@ -197,6 +199,8 @@ export function approvedAdjustmentTotal(job: Pick<Job, 'adjustments'>): number {
 }
 
 /** What will actually be captured: the locked total, plus anything the customer approved. */
-export function finalChargeableTotal(job: Pick<Job, 'quote' | 'adjustments' | 'tipAmount'>): number {
+export function finalChargeableTotal(
+  job: Pick<Job, 'quote' | 'adjustments' | 'tipAmount'>,
+): number {
   return job.quote.lockedTotal + approvedAdjustmentTotal(job) + job.tipAmount;
 }

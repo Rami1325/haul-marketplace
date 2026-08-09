@@ -252,17 +252,13 @@ export function validateRateCard(card: RateCard): string[] {
   const problems: string[] = [];
 
   if (card.driverShareBps < 5_000 || card.driverShareBps > 9_500) {
-    problems.push(
-      `driver share of ${card.driverShareBps / 100}% is outside the sane 50–95% band`,
-    );
+    problems.push(`driver share of ${card.driverShareBps / 100}% is outside the sane 50–95% band`);
   }
   // Plan §08: below 15% take doesn't cover support and payment costs; above 25%
   // and drivers organise off-platform.
   const takeBps = 10_000 - card.driverShareBps;
   if (takeBps < 1_500 || takeBps > 2_500) {
-    problems.push(
-      `take rate of ${takeBps / 100}% is outside the 15–25% band the model assumes`,
-    );
+    problems.push(`take rate of ${takeBps / 100}% is outside the 15–25% band the model assumes`);
   }
   if (card.maxDemandFactorBps > 15_000) {
     problems.push('demand factor cap above ×1.5 will read as surge pricing');

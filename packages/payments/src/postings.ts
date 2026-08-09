@@ -94,10 +94,7 @@ export interface CaptureJobInput {
  * The main event. Customer money lands at the PSP; the driver's share becomes a
  * liability; what is left splits into revenue and the VAT we owe on it.
  */
-export function captureJobPostings(
-  input: CaptureJobInput,
-  ctx: PostingContext,
-): LedgerTransaction {
+export function captureJobPostings(input: CaptureJobInput, ctx: PostingContext): LedgerTransaction {
   const { grossTotal, driverPayout, vatRate, promoAmount } = input;
 
   if (driverPayout > grossTotal && !promoAmount) {
@@ -128,9 +125,7 @@ export function captureJobPostings(
       entry(LedgerAccount.PromoExpense, promoSplit.net, 'promotional discount'),
     );
   } else {
-    entries.push(
-      entry(LedgerAccount.PlatformRevenue, agorot(-takeSplit.net), 'platform revenue'),
-    );
+    entries.push(entry(LedgerAccount.PlatformRevenue, agorot(-takeSplit.net), 'platform revenue'));
   }
 
   entries.push(entry(LedgerAccount.VatPayable, agorot(-takeSplit.vat), 'VAT on platform revenue'));

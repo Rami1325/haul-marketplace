@@ -19,10 +19,20 @@ import {
   type PriceLine,
   type VehicleClassId,
 } from '@haul/types';
-import { assessCraneNeed, craneIsPriced, DEFAULT_CRANE_RULES, type CraneAssessment, type CraneRules } from './crane.js';
+import {
+  assessCraneNeed,
+  craneIsPriced,
+  DEFAULT_CRANE_RULES,
+  type CraneAssessment,
+  type CraneRules,
+} from './crane.js';
 import { stableHash } from './hash.js';
 import type { RateCard } from './rate-card.js';
-import { estimateWorkingMinutes, type StopWorkInput, type WorkingMinutesBreakdown } from './working-minutes.js';
+import {
+  estimateWorkingMinutes,
+  type StopWorkInput,
+  type WorkingMinutesBreakdown,
+} from './working-minutes.js';
 
 /**
  * ---------------------------------------------------------------------------
@@ -277,11 +287,7 @@ export function computeQuote(
   // --- fixed: crane, heavy items, extra stops -------------------------------
   for (const { stopIndex, assessment } of pricedCranes) {
     const stop = input.stops[stopIndex];
-    const crane = priceCrane(
-      Math.max(0, stop?.access.floor ?? 0),
-      assessment.volumeM3,
-      card,
-    );
+    const crane = priceCrane(Math.max(0, stop?.access.floor ?? 0), assessment.volumeM3, card);
     drafts.push({
       kind: PriceLineKind.Crane,
       key: `crane.${stopIndex}`,
@@ -336,9 +342,7 @@ export function computeQuote(
     Math.round((timeFactor * seasonalFactor * demandFactor) / 100_000_000),
   );
 
-  const scalableTotal = drafts
-    .filter((d) => d.scalable)
-    .reduce((acc, d) => acc + d.amount, 0);
+  const scalableTotal = drafts.filter((d) => d.scalable).reduce((acc, d) => acc + d.amount, 0);
   const uplift = applyBps(agorot(scalableTotal), combinedFactor) - scalableTotal;
 
   const lines: PriceLine[] = drafts.map((d) => toLine(d));
@@ -545,7 +549,11 @@ export function priceCrane(
   // than rounded up, which is what operators quote.
   const amount = band.callOut + Math.max(0, hours - 1) * band.perHour;
 
-  return { amount: Math.round(amount), hours: Math.round(hours * 10) / 10, bandMaxFloor: band.maxFloor };
+  return {
+    amount: Math.round(amount),
+    hours: Math.round(hours * 10) / 10,
+    bandMaxFloor: band.maxFloor,
+  };
 }
 
 function formatHours(hours: number): string {

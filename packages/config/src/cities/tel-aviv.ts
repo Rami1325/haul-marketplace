@@ -235,10 +235,34 @@ export const TEL_AVIV_MARKET_ANCHORS: ReadonlyArray<{
   low: Agorot;
   high: Agorot;
 }> = [
-  { presetId: 'apartment_2_rooms', rooms: '2 חדרים', typical: shekels(1_900), low: shekels(1_100), high: shekels(2_900) },
-  { presetId: 'apartment_3_rooms', rooms: '3 חדרים', typical: shekels(2_800), low: shekels(1_950), high: shekels(3_800) },
-  { presetId: 'apartment_4_rooms', rooms: '4 חדרים', typical: shekels(3_800), low: shekels(2_300), high: shekels(5_000) },
-  { presetId: 'apartment_5_rooms_plus', rooms: '5 חדרים', typical: shekels(5_000), low: shekels(3_150), high: shekels(6_500) },
+  {
+    presetId: 'apartment_2_rooms',
+    rooms: '2 חדרים',
+    typical: shekels(1_900),
+    low: shekels(1_100),
+    high: shekels(2_900),
+  },
+  {
+    presetId: 'apartment_3_rooms',
+    rooms: '3 חדרים',
+    typical: shekels(2_800),
+    low: shekels(1_950),
+    high: shekels(3_800),
+  },
+  {
+    presetId: 'apartment_4_rooms',
+    rooms: '4 חדרים',
+    typical: shekels(3_800),
+    low: shekels(2_300),
+    high: shekels(5_000),
+  },
+  {
+    presetId: 'apartment_5_rooms_plus',
+    rooms: '5 חדרים',
+    typical: shekels(5_000),
+    low: shekels(3_150),
+    high: shekels(6_500),
+  },
 ];
 
 export const TEL_AVIV_RATE_CARD_SOURCES: readonly string[] = [

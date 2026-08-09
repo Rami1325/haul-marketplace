@@ -105,7 +105,9 @@ export const offers = pgTable(
     /** Shown as a number, never as a percentage. */
     payout: agorot('payout').notNull(),
     /** Extra offered in wave 3 to clear a job nobody took. Shown as a win. */
-    payoutBoost: agorot('payout_boost').notNull().default(0 as never),
+    payoutBoost: agorot('payout_boost')
+      .notNull()
+      .default(0 as never),
 
     distanceToPickupMeters: integer('distance_to_pickup_meters').notNull(),
     etaToPickupSeconds: integer('eta_to_pickup_seconds').notNull(),

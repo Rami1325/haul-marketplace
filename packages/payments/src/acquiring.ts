@@ -75,8 +75,7 @@ export const AuthorizationStatus = {
   Expired: 'expired',
   Declined: 'declined',
 } as const;
-export type AuthorizationStatus =
-  (typeof AuthorizationStatus)[keyof typeof AuthorizationStatus];
+export type AuthorizationStatus = (typeof AuthorizationStatus)[keyof typeof AuthorizationStatus];
 
 export const AuthorizationSchema = z.object({
   id: z.string().min(1).max(128),

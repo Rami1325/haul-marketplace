@@ -87,13 +87,11 @@ export function fixedToGregorian(fixed: number): { year: number; month: number; 
   const d3 = d2 - n4 * 1461;
   const n1 = floorDiv(d3, 365);
 
-  const year =
-    400 * n400 + 100 * n100 + 4 * n4 + n1 + (n100 === 4 || n1 === 4 ? 0 : 1);
+  const year = 400 * n400 + 100 * n100 + 4 * n4 + n1 + (n100 === 4 || n1 === 4 ? 0 : 1);
 
   // Recover month and day by walking back from the start of the year.
   const priorDays = fixed - gregorianToFixed(year, 1, 1);
-  const correction =
-    fixed < gregorianToFixed(year, 3, 1) ? 0 : isGregorianLeapYear(year) ? 1 : 2;
+  const correction = fixed < gregorianToFixed(year, 3, 1) ? 0 : isGregorianLeapYear(year) ? 1 : 2;
   const month = floorDiv(12 * (priorDays + correction) + 373, 367);
   const day = fixed - gregorianToFixed(year, month, 1) + 1;
 
@@ -104,7 +102,7 @@ export function fixedToGregorian(fixed: number): { year: number; month: number; 
 
 /** Seven leap years in every nineteen. */
 export function isHebrewLeapYear(year: number): boolean {
-  return ((7 * year + 1) % 19) < 7;
+  return (7 * year + 1) % 19 < 7;
 }
 
 export function lastMonthOfHebrewYear(year: number): number {
@@ -202,9 +200,8 @@ export function fixedToHebrew(fixed: number): HebrewDate {
   while (hebrewNewYear(year + 1) <= fixed) year++;
   while (hebrewNewYear(year) > fixed) year--;
 
-  let month = fixed < hebrewToFixed(year, HebrewMonth.Nisan, 1)
-    ? HebrewMonth.Tishrei
-    : HebrewMonth.Nisan;
+  let month =
+    fixed < hebrewToFixed(year, HebrewMonth.Nisan, 1) ? HebrewMonth.Tishrei : HebrewMonth.Nisan;
   while (fixed > hebrewToFixed(year, month, lastDayOfHebrewMonth(year, month))) month++;
 
   const day = fixed - hebrewToFixed(year, month, 1) + 1;

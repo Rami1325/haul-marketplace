@@ -94,9 +94,7 @@ describe('restricted periods run sunset to nightfall', () => {
       jerusalemWallClockToUtc(2026, 8, 8, 0, 0).getTime(),
     );
     // Ends on the Saturday evening, not at Sunday midnight.
-    expect(period!.end.getTime()).toBeLessThan(
-      jerusalemWallClockToUtc(2026, 8, 9, 0, 0).getTime(),
-    );
+    expect(period!.end.getTime()).toBeLessThan(jerusalemWallClockToUtc(2026, 8, 9, 0, 0).getTime());
     expect(period!.reasonHe).toContain('שבת');
   });
 
@@ -141,8 +139,7 @@ describe('sunset is plausible for Israel', () => {
     for (let d = 1; d <= 20; d++) {
       const iso = `2026-06-${String(d).padStart(2, '0')}`;
       const sunset = sunsetAt(fixedOf(iso), TEL_AVIV)!;
-      const minutesLocal =
-        sunset.getTime() - jerusalemWallClockToUtc(2026, 6, d, 0, 0).getTime();
+      const minutesLocal = sunset.getTime() - jerusalemWallClockToUtc(2026, 6, d, 0, 0).getTime();
       expect(minutesLocal).toBeGreaterThan(previous);
       previous = minutesLocal;
     }

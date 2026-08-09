@@ -99,11 +99,17 @@ export const OfferSchema = z.object({
 });
 export type Offer = z.infer<typeof OfferSchema>;
 
-export function offerSecondsRemaining(offer: Pick<Offer, 'expiresAt'>, now: Date = new Date()): number {
+export function offerSecondsRemaining(
+  offer: Pick<Offer, 'expiresAt'>,
+  now: Date = new Date(),
+): number {
   return Math.max(0, Math.ceil((offer.expiresAt.getTime() - now.getTime()) / 1000));
 }
 
-export function isOfferLive(offer: Pick<Offer, 'status' | 'expiresAt'>, now: Date = new Date()): boolean {
+export function isOfferLive(
+  offer: Pick<Offer, 'status' | 'expiresAt'>,
+  now: Date = new Date(),
+): boolean {
   return offer.status === OfferStatus.Pending && offer.expiresAt > now;
 }
 

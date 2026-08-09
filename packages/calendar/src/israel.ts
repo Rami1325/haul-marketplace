@@ -75,14 +75,70 @@ export interface HolidayInfo {
  * calendar bought abroad would suggest.
  */
 const YOM_TOV: ReadonlyArray<{ month: number; day: number } & HolidayInfo> = [
-  { month: HebrewMonth.Tishrei, day: 1, id: 'rosh_hashana_1', nameHe: 'ראש השנה', nameEn: 'Rosh Hashana', isYomTov: true },
-  { month: HebrewMonth.Tishrei, day: 2, id: 'rosh_hashana_2', nameHe: 'ראש השנה ב׳', nameEn: 'Rosh Hashana II', isYomTov: true },
-  { month: HebrewMonth.Tishrei, day: 10, id: 'yom_kippur', nameHe: 'יום כיפור', nameEn: 'Yom Kippur', isYomTov: true },
-  { month: HebrewMonth.Tishrei, day: 15, id: 'sukkot_1', nameHe: 'סוכות', nameEn: 'Sukkot', isYomTov: true },
-  { month: HebrewMonth.Tishrei, day: 22, id: 'shmini_atzeret', nameHe: 'שמיני עצרת', nameEn: 'Shmini Atzeret', isYomTov: true },
-  { month: HebrewMonth.Nisan, day: 15, id: 'pesach_1', nameHe: 'פסח', nameEn: 'Pesach', isYomTov: true },
-  { month: HebrewMonth.Nisan, day: 21, id: 'pesach_7', nameHe: 'שביעי של פסח', nameEn: 'Seventh of Pesach', isYomTov: true },
-  { month: HebrewMonth.Sivan, day: 6, id: 'shavuot', nameHe: 'שבועות', nameEn: 'Shavuot', isYomTov: true },
+  {
+    month: HebrewMonth.Tishrei,
+    day: 1,
+    id: 'rosh_hashana_1',
+    nameHe: 'ראש השנה',
+    nameEn: 'Rosh Hashana',
+    isYomTov: true,
+  },
+  {
+    month: HebrewMonth.Tishrei,
+    day: 2,
+    id: 'rosh_hashana_2',
+    nameHe: 'ראש השנה ב׳',
+    nameEn: 'Rosh Hashana II',
+    isYomTov: true,
+  },
+  {
+    month: HebrewMonth.Tishrei,
+    day: 10,
+    id: 'yom_kippur',
+    nameHe: 'יום כיפור',
+    nameEn: 'Yom Kippur',
+    isYomTov: true,
+  },
+  {
+    month: HebrewMonth.Tishrei,
+    day: 15,
+    id: 'sukkot_1',
+    nameHe: 'סוכות',
+    nameEn: 'Sukkot',
+    isYomTov: true,
+  },
+  {
+    month: HebrewMonth.Tishrei,
+    day: 22,
+    id: 'shmini_atzeret',
+    nameHe: 'שמיני עצרת',
+    nameEn: 'Shmini Atzeret',
+    isYomTov: true,
+  },
+  {
+    month: HebrewMonth.Nisan,
+    day: 15,
+    id: 'pesach_1',
+    nameHe: 'פסח',
+    nameEn: 'Pesach',
+    isYomTov: true,
+  },
+  {
+    month: HebrewMonth.Nisan,
+    day: 21,
+    id: 'pesach_7',
+    nameHe: 'שביעי של פסח',
+    nameEn: 'Seventh of Pesach',
+    isYomTov: true,
+  },
+  {
+    month: HebrewMonth.Sivan,
+    day: 6,
+    id: 'shavuot',
+    nameHe: 'שבועות',
+    nameEn: 'Shavuot',
+    isYomTov: true,
+  },
 ];
 
 /** Intermediate festival days. Not work-prohibited — and a demand spike. */
@@ -131,7 +187,12 @@ export function holidayOn(fixed: number): HolidayInfo | null {
   }
 
   if (fixed === yomHaatzmautFixed(hebrew.year)) {
-    return { id: 'yom_haatzmaut', nameHe: 'יום העצמאות', nameEn: 'Independence Day', isYomTov: false };
+    return {
+      id: 'yom_haatzmaut',
+      nameHe: 'יום העצמאות',
+      nameEn: 'Independence Day',
+      isYomTov: false,
+    };
   }
   if (fixed === yomHaatzmautFixed(hebrew.year) - 1) {
     return { id: 'yom_hazikaron', nameHe: 'יום הזיכרון', nameEn: 'Memorial Day', isYomTov: false };
@@ -347,9 +408,7 @@ export function dispatchWindowsFor(
   for (const period of restrictedPeriodsBetween(fixed, fixed, location)) {
     // Push the start of the block earlier by the cushion, so we never begin a
     // job that cannot finish before it lands.
-    const blockedFrom = new Date(
-      period.start.getTime() - hours.preShabbatBufferMinutes * 60_000,
-    );
+    const blockedFrom = new Date(period.start.getTime() - hours.preShabbatBufferMinutes * 60_000);
     windows = windows.flatMap((w) => subtractInterval(w, { start: blockedFrom, end: period.end }));
   }
 

@@ -69,7 +69,9 @@ export const jobs = pgTable(
     completionPin: varchar('completion_pin', { length: 12 }),
     signatureUrl: varchar('signature_url', { length: 500 }),
 
-    tipAmount: agorot('tip_amount').notNull().default(0 as never),
+    tipAmount: agorot('tip_amount')
+      .notNull()
+      .default(0 as never),
 
     cancelledBy: varchar('cancelled_by', { length: 20 }),
     cancelledAt: timestamptz('cancelled_at'),
@@ -219,7 +221,9 @@ export const quotes = pgTable(
     /** Guaranteed ₪ figure, computed on the *undiscounted* fare. */
     driverPayout: agorot('driver_payout').notNull(),
     /** Booked as marketing expense, never taken out of the driver's share. */
-    promoAmountGross: agorot('promo_amount_gross').notNull().default(0 as never),
+    promoAmountGross: agorot('promo_amount_gross')
+      .notNull()
+      .default(0 as never),
 
     issuedAt: timestamptz('issued_at').notNull().defaultNow(),
     expiresAt: timestamptz('expires_at').notNull(),

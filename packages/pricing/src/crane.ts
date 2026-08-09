@@ -124,10 +124,7 @@ export function assessCraneNeed(
   if (access.floor >= rules.craneFromFloor) {
     // A small lift is the trap: the customer answers "yes, there's a lift" and
     // the crew discovers it takes people and not sofas.
-    const liftCaveat =
-      access.elevator === ElevatorKind.Small
-        ? ' (המעלית קטנה מדי לרהיטים)'
-        : '';
+    const liftCaveat = access.elevator === ElevatorKind.Small ? ' (המעלית קטנה מדי לרהיטים)' : '';
     return recommend(
       `קומה ${access.floor} ללא מעלית מתאימה${liftCaveat}`,
       `Floor ${access.floor} with no suitable lift${access.elevator === ElevatorKind.Small ? ' (the lift is too small for furniture)' : ''}`,

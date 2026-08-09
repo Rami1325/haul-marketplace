@@ -126,8 +126,7 @@ describe('money moves at exactly three points', () => {
   it('captures at most once along any single route through the machine', () => {
     for (const path of allSimplePathsFrom(JobState.Quoted)) {
       const captures = path.filter(
-        (t) =>
-          t.money === MoneyEffect.Capture || t.money === MoneyEffect.CaptureCancellationFee,
+        (t) => t.money === MoneyEffect.Capture || t.money === MoneyEffect.CaptureCancellationFee,
       );
       expect(
         captures.length,
@@ -457,8 +456,10 @@ describe('structural invariants of the table', () => {
     // end up in the database instead.
     for (const state of Object.values(JobState)) {
       if (isTerminal(state)) continue;
-      expect(availableEvents(state, Actor.Ops).length, `ops are locked out of ${state}`)
-        .toBeGreaterThan(0);
+      expect(
+        availableEvents(state, Actor.Ops).length,
+        `ops are locked out of ${state}`,
+      ).toBeGreaterThan(0);
     }
   });
 });

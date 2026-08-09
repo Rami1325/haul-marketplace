@@ -77,16 +77,14 @@ export function formatIsraeliMobile(e164: string): string {
   return `0${national.slice(0, 2)}-${national.slice(2, 5)}-${national.slice(5)}`;
 }
 
-export const IsraeliMobileSchema = z
-  .string()
-  .transform((v, ctx) => {
-    const normalised = normaliseIsraeliMobile(v);
-    if (!normalised) {
-      ctx.addIssue({ code: 'custom', message: 'not a valid Israeli mobile number' });
-      return z.NEVER;
-    }
-    return normalised;
-  });
+export const IsraeliMobileSchema = z.string().transform((v, ctx) => {
+  const normalised = normaliseIsraeliMobile(v);
+  if (!normalised) {
+    ctx.addIssue({ code: 'custom', message: 'not a valid Israeli mobile number' });
+    return z.NEVER;
+  }
+  return normalised;
+});
 
 // --- the Israeli week -------------------------------------------------------
 

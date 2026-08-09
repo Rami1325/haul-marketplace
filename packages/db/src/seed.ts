@@ -1,8 +1,22 @@
-import { CATALOG, MANIFEST_PRESETS, TEL_AVIV_CITY, TEL_AVIV_RATE_CARD, VEHICLE_CLASSES } from '@haul/config';
+import {
+  CATALOG,
+  MANIFEST_PRESETS,
+  TEL_AVIV_CITY,
+  TEL_AVIV_RATE_CARD,
+  VEHICLE_CLASSES,
+} from '@haul/config';
 import { ID_PREFIX, newId } from '@haul/types';
 import { sql } from 'drizzle-orm';
 import { createClient } from './client.js';
-import { cities, drivers, driverPresence, featureFlags, rateCards, users, vehicles } from './schema/index.js';
+import {
+  cities,
+  drivers,
+  driverPresence,
+  featureFlags,
+  rateCards,
+  users,
+  vehicles,
+} from './schema/index.js';
 
 /**
  * Seed for local development.
@@ -51,8 +65,18 @@ const DRIVER_NAMES: Array<[string, string]> = [
 ];
 
 const VEHICLE_MIX = [
-  'van', 'van', 'van', 'small_van', 'small_van', 'box_truck_4t',
-  'box_truck_4t', 'box_truck_4t', 'pickup', 'crane_truck', 'box_truck_8t', 'van',
+  'van',
+  'van',
+  'van',
+  'small_van',
+  'small_van',
+  'box_truck_4t',
+  'box_truck_4t',
+  'box_truck_4t',
+  'pickup',
+  'crane_truck',
+  'box_truck_8t',
+  'van',
 ] as const;
 
 async function main() {
@@ -116,7 +140,10 @@ async function main() {
       const driverId = idFor(ID_PREFIX.driver, 100 + i);
       const vehicleId = idFor(ID_PREFIX.vehicle, 100 + i);
       const classId = VEHICLE_MIX[i]!;
-      const position = scatter(TEL_AVIV_CITY.launchArea.centre, TEL_AVIV_CITY.launchArea.radiusMeters);
+      const position = scatter(
+        TEL_AVIV_CITY.launchArea.centre,
+        TEL_AVIV_CITY.launchArea.radiusMeters,
+      );
 
       await db
         .insert(users)
@@ -191,7 +218,8 @@ async function main() {
             activeVehicleId: vehicleId,
             activeVehicleClass: classId,
             wentOnlineAt: new Date(Date.now() - Math.floor(random() * 240) * 60_000),
-            lastOfferAt: random() > 0.5 ? new Date(Date.now() - Math.floor(random() * 90) * 60_000) : null,
+            lastOfferAt:
+              random() > 0.5 ? new Date(Date.now() - Math.floor(random() * 90) * 60_000) : null,
           })
           .onConflictDoNothing();
       }
@@ -200,8 +228,16 @@ async function main() {
     await db
       .insert(featureFlags)
       .values([
-        { key: 'scan_my_stuff', description: 'Vision manifest from photos (Phase 2)', isEnabled: false },
-        { key: 'choose_your_crew', description: 'Pick from three nearby movers (Phase 2)', isEnabled: false },
+        {
+          key: 'scan_my_stuff',
+          description: 'Vision manifest from photos (Phase 2)',
+          isEnabled: false,
+        },
+        {
+          key: 'choose_your_crew',
+          description: 'Pick from three nearby movers (Phase 2)',
+          isEnabled: false,
+        },
         { key: 'protection_tiers', description: 'Paid damage cover at booking', isEnabled: true },
       ])
       .onConflictDoNothing();
@@ -220,7 +256,9 @@ async function main() {
     for (const row of counts as unknown as Array<{ table: string; n: number }>) {
       console.log(`  ${row.table.padEnd(18)} ${row.n}`);
     }
-    console.log(`\ncatalog: ${CATALOG.length} items · ${MANIFEST_PRESETS.length} presets · ${VEHICLE_CLASSES.length} vehicle classes (served from @haul/config, not the DB)`);
+    console.log(
+      `\ncatalog: ${CATALOG.length} items · ${MANIFEST_PRESETS.length} presets · ${VEHICLE_CLASSES.length} vehicle classes (served from @haul/config, not the DB)`,
+    );
     console.log(`${online} drivers online in the launch cluster`);
   } finally {
     await client.end();

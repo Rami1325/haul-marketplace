@@ -162,8 +162,7 @@ export function estimateWorkingMinutes(
   const crewFactor = crewFactorFor(input.crewSize, config.crewScalingExponent);
   const scaledPhysicalWork = physicalWork * crewFactor;
 
-  const beforeBuffer =
-    fixedOverhead + stopOverhead + difficultParking + crane + scaledPhysicalWork;
+  const beforeBuffer = fixedOverhead + stopOverhead + difficultParking + crane + scaledPhysicalWork;
 
   const bufferMinutes = (beforeBuffer * config.bufferBps) / 10_000;
 

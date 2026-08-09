@@ -19,8 +19,7 @@ export interface ClientOptions {
  * not need a separate pool wrapper.
  */
 export function createClient(options: ClientOptions = {}) {
-  const connectionString =
-    options.connectionString ?? process.env['DATABASE_URL'] ?? '';
+  const connectionString = options.connectionString ?? process.env['DATABASE_URL'] ?? '';
 
   if (!connectionString) {
     throw new Error('DATABASE_URL is not set — copy .env.example to .env');
