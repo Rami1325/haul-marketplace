@@ -2,6 +2,7 @@
   "name": "haul",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "description": "A truck and a pair of hands, on demand — at a price that doesn't move.",
   "packageManager": "pnpm@11.13.1",
   "engines": {
@@ -12,6 +13,7 @@
     "dev": "turbo run dev",
     "typecheck": "turbo run typecheck",
     "lint": "turbo run lint",
+    "lint:fix": "turbo run lint -- --fix",
     "test": "turbo run test",
     "test:watch": "turbo run test:watch",
     "clean": "turbo run clean && rimraf node_modules",
@@ -26,11 +28,17 @@
     "db:studio": "pnpm --filter @haul/db studio"
   },
   "devDependencies": {
+    "@eslint/js": "10.0.1",
     "@types/node": "^24.10.1",
+    "eslint": "10.8.1",
+    "eslint-plugin-react": "7.37.5",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "globals": "17.9.0",
     "prettier": "^3.6.2",
     "rimraf": "^6.0.1",
     "turbo": "^2.10.9",
     "typescript": "^5.9.3",
+    "typescript-eslint": "8.66.0",
     "vitest": "^4.1.10"
   }
 }

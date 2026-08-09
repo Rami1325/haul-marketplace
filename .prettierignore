@@ -1,0 +1,23 @@
+# Generated artifacts. These are written by a script and verified against it, so
+# a formatter reaching into them turns a Prettier upgrade into a failing build.
+#
+# packages/ui/src/styles/theme.css is the sharp case: it is emitted by
+# scripts/build-theme-css.mts and __tests__/theme-css.test.ts asserts the
+# committed file is byte-identical to a fresh generation. Prettier happens to
+# agree with the generator's output today; nothing guarantees it will after the
+# next release, and the failure would look like a broken design system rather
+# than a reformatted file.
+packages/ui/src/styles/theme.css
+packages/config/src/data/*.json
+packages/config/scripts/raw-workflow-output.json
+packages/db/migrations/
+
+# Lockfiles and machine state.
+pnpm-lock.yaml
+.turbo/
+node_modules/
+dist/
+.next/
+
+# Local editor and tool state that is not this repo's to format.
+.claude/settings.local.json

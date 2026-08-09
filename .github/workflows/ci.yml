@@ -1,0 +1,140 @@
+# ---------------------------------------------------------------------------
+# CI
+# ---------------------------------------------------------------------------
+# This repository states its rules as tests rather than as comments: the ledger
+# balances, the state machine is deterministic, the dispatch query is
+# index-assisted. None of that protects anything unless something runs it on
+# every change, on a machine nobody has configured by hand.
+#
+# The database suite runs for real here. `@haul/db`'s tests skip cleanly when
+# Postgres is absent, which is right for a laptop without Docker and wrong for
+# CI — the suite that would skip is the one proving the `ST_DWithin` plan
+# reaches the GiST index, and a green build that quietly skipped it would be a
+# weaker signal than a developer's local run. The service container below is
+# the same image and the same credentials as `docker-compose.yml`, so CI and a
+# laptop have nothing to disagree about.
+# ---------------------------------------------------------------------------
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# A superseded commit's run tells us nothing we still care about, and the
+# database service container is the expensive part of this job.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: format · lint · typecheck · test · build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    services:
+      postgres:
+        # PostGIS is not optional — the whole dispatch layer is ST_DWithin.
+        # Pinned to the same tag as docker-compose.yml.
+        image: postgis/postgis:16-3.4
+        env:
+          POSTGRES_USER: haul
+          POSTGRES_PASSWORD: haul_dev
+          POSTGRES_DB: haul
+          # The database runs UTC and conversion happens at the edge.
+          TZ: UTC
+          PGTZ: UTC
+        ports:
+          - 5432:5432
+        # Steps do not start until this reports healthy, so nothing needs to
+        # poll for the database by hand.
+        options: >-
+          --health-cmd "pg_isready -U haul -d haul"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+
+    env:
+      DATABASE_URL: postgresql://haul:haul_dev@localhost:5432/haul
+      COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
+      TURBO_TELEMETRY_DISABLED: '1'
+      DO_NOT_TRACK: '1'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Node
+        uses: actions/setup-node@v5
+        with:
+          # The stack is pinned to Node 24. `engines` says >=22 because that is
+          # the floor a consumer must clear, not the version we build against.
+          node-version: '24'
+
+      # Corepack installs its shims beside whichever Node is on PATH, so it has
+      # to run after setup-node has replaced the runner's default Node. The
+      # version comes from the `packageManager` field, which is the only place
+      # pnpm's version is written down.
+      - name: Activate pnpm
+        run: |
+          corepack enable
+          pnpm --version
+
+      - name: Locate the pnpm store
+        id: pnpm
+        run: echo "store=$(pnpm store path --silent)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache the pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm.outputs.store }}
+          key: pnpm-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            pnpm-${{ runner.os }}-
+
+      # Local cache only. Remote caching would need a token this project does
+      # not have, and inventing one here would fail every run on a fork.
+      - name: Cache turbo
+        uses: actions/cache@v4
+        with:
+          path: .turbo/cache
+          key: turbo-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            turbo-${{ runner.os }}-
+
+      # --frozen-lockfile so a lockfile that drifted from package.json fails
+      # here rather than resolving to something nobody has run locally.
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Format
+        run: pnpm format:check
+
+      # Currently matches no package — ESLint is still the open item in WS-0.
+      # The step exists so the day it lands, nothing has to be remembered.
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      # This is also the guard against a silently skipped database suite. If the
+      # service container were missing, misconfigured, or built from an image
+      # without PostGIS, this step fails loudly instead of the tests passing by
+      # skipping. Seeding runs too because a seed that no longer matches the
+      # schema breaks every new developer's first hour, and nothing else notices.
+      - name: Migrate and seed
+        run: |
+          pnpm db:migrate
+          pnpm db:seed
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
