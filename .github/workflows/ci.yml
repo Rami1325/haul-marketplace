@@ -115,8 +115,6 @@ jobs:
       - name: Format
         run: pnpm format:check
 
-      # Currently matches no package — ESLint is still the open item in WS-0.
-      # The step exists so the day it lands, nothing has to be remembered.
       - name: Lint
         run: pnpm lint
 
@@ -136,5 +134,9 @@ jobs:
       - name: Test
         run: pnpm test
 
+      # Packages are consumed as source TypeScript, so this currently executes no
+      # tasks and turbo says so. Kept because the first app — the Next.js booking
+      # flow in WS-5 — is the thing that will need building, and a build step
+      # added at the same time as the first build is a step nobody tests.
       - name: Build
         run: pnpm build
