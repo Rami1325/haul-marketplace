@@ -1,4 +1,5 @@
-import type { Locale } from '@haul/types';
+'use client';
+
 import {
   useId,
   type ComponentPropsWithRef,
@@ -7,6 +8,7 @@ import {
   type ReactNode,
 } from 'react';
 import { cn } from '../lib/cn.js';
+import { percentLabel } from '../lib/percent.js';
 import { variants, type VariantProps } from '../lib/variants.js';
 import { useDirection } from './direction.js';
 
@@ -100,7 +102,9 @@ import { useDirection } from './direction.js';
  * puts into words, and it is formatted from the surrounding locale rather than
  * written down — for the same reason there is no `aria-valuetext`: a hand-typed
  * "40 percent" is English prose smuggled into a primitive, while `aria-valuenow`
- * is spoken by the screen reader in whatever language the user runs it in.
+ * is spoken by the screen reader in whatever language the user runs it in. The
+ * formatting itself lives in `lib/percent.ts`, because `Progress` publishes the
+ * same figure and one decision written twice is one decision that will diverge.
  * ---------------------------------------------------------------------------
  */
 
@@ -156,19 +160,6 @@ export const buttonVariants = variants({
     },
   ],
 });
-
-/**
- * The percentage as text, for the assistive technologies that read a
- * description as the text of the element it points at rather than as that
- * element's value. It is formatted, not written: `40%` is the same string in
- * Hebrew and in English, which is exactly why it would get typed as a literal
- * once and stay wrong the day a third locale arrives.
- */
-function percentLabel(locale: Locale, percent: number): string {
-  return new Intl.NumberFormat(locale, { style: 'percent', maximumFractionDigits: 0 }).format(
-    percent / 100,
-  );
-}
 
 export type ButtonOwnProps = VariantProps<typeof BUTTON_VARIANTS> & {
   /**

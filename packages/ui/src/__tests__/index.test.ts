@@ -28,7 +28,7 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const SRC = path.resolve(HERE, '..');
 
 /** Modules whose public surface is meant to be reachable by a consumer. */
-const PUBLIC_DIRS = ['components', 'tokens', 'lib'] as const;
+const PUBLIC_DIRS = ['components', 'tokens', 'lib', 'icons'] as const;
 
 /**
  * Modules that are public but reached through a `package.json` subpath rather

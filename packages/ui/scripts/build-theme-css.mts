@@ -3,9 +3,15 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { colorCssNames, colorThemes, colorTokens, type ThemeName } from '../src/tokens/color.js';
-import { durationTokens, durations, easings } from '../src/tokens/motion.js';
+import { durationTokens, durations, easings, indeterminateSweep } from '../src/tokens/motion.js';
 import { radius, radiusTokens } from '../src/tokens/radius.js';
-import { MIN_TAP_TARGET, controlHeights, controlSizes, iconSizes } from '../src/tokens/size.js';
+import {
+  MIN_TAP_TARGET,
+  controlHeights,
+  controlSizes,
+  iconSizes,
+  tileSizes,
+} from '../src/tokens/size.js';
 import { space, spaceTokens } from '../src/tokens/space.js';
 import {
   fontFamilies,
@@ -234,6 +240,34 @@ export function buildThemeCss(): string {
   for (const [name, value] of Object.entries(iconSizes)) {
     lines.push(decl(`icon-${name}`, value));
   }
+  lines.push('');
+
+  lines.push('  /* Tile floors. A grid is told the narrowest a cell may be and derives its own');
+  lines.push('     column count, so the item picker needs no breakpoint ladder and stays right');
+  lines.push('     for a customer who has turned system text up. In rem for that reason. */');
+  for (const [name, value] of Object.entries(tileSizes)) {
+    lines.push(decl(`tile-${name}`, value));
+  }
+  lines.push('');
+
+  lines.push('  /* The indeterminate progress sweep. Spinners are banned, so a wait of unknown');
+  lines.push('     length is still a bar; it animates `inline-size` rather than a transform,');
+  lines.push('     which is what makes it grow from the reading start in Hebrew. */');
+  lines.push(
+    decl(
+      `animate-${indeterminateSweep.token}`,
+      `${indeterminateSweep.name} ${indeterminateSweep.duration} var(--ease-${indeterminateSweep.easing}) infinite`,
+    ),
+  );
+  lines.push('');
+  lines.push(`  @keyframes ${indeterminateSweep.name} {`);
+  lines.push('    from {');
+  lines.push(`      inline-size: ${indeterminateSweep.from};`);
+  lines.push('    }');
+  lines.push('    to {');
+  lines.push(`      inline-size: ${indeterminateSweep.to};`);
+  lines.push('    }');
+  lines.push('  }');
 
   lines.push('}', '');
 

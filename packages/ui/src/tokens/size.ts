@@ -96,3 +96,43 @@ export const iconSizes = {
   lg: '24px',
   xl: '32px',
 } as const satisfies Readonly<Record<IconSize, string>>;
+
+/**
+ * The narrowest a tile in a grid may get before the grid drops a column.
+ *
+ * The item picker is the flagship first screen and it is a grid of tiles, each
+ * holding a glyph, a Hebrew name and a stepper. What decides how many fit across
+ * is the width that content needs, not the width of a phone somebody owned in
+ * 2019 — so the grid is told the floor and works the column count out for
+ * itself. A breakpoint ladder would state the same thing worse: it is a guess
+ * about devices that has to be re-guessed for every new one, and it is silently
+ * wrong for the customer who has turned system text up, because their tiles need
+ * more room at a screen width the ladder still calls "medium".
+ *
+ * These are rem where the tap-target floor is px, and the two units are the
+ * whole difference between the two rules. 44px is a claim about a fingertip and
+ * must not scale; a tile floor is a claim about content and must.
+ */
+export const tileSizesRem = {
+  /** A dense grid of one glyph and one short word. */
+  sm: 7,
+  /** The item picker: glyph, name, stepper. */
+  md: 9.5,
+  /** A preset card, which carries a sentence of description under its name. */
+  lg: 13,
+} as const;
+
+export type TileSize = keyof typeof tileSizesRem;
+
+export const tileSizes = {
+  sm: '7rem',
+  md: '9.5rem',
+  lg: '13rem',
+} as const satisfies Readonly<Record<TileSize, string>>;
+
+/** For React Native and for anything measuring rather than styling. */
+export const tileSizesPx = {
+  sm: 112,
+  md: 152,
+  lg: 208,
+} as const satisfies Readonly<Record<TileSize, number>>;

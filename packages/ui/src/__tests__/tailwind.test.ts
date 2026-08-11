@@ -8,8 +8,11 @@ import { createRequire } from 'node:module';
 import { buttonVariants } from '../components/button.js';
 import { cardVariants } from '../components/card.js';
 import { chipVariants } from '../components/chip.js';
+import { gridVariants } from '../components/grid.js';
+import { iconSizeClasses } from '../components/icon.js';
 import { moneyVariants } from '../components/money.js';
 import { priceCardVariants } from '../components/price-card.js';
+import { progressVariants } from '../components/progress.js';
 import { stackVariants } from '../components/stack.js';
 
 /**
@@ -104,9 +107,21 @@ const RECIPES: Readonly<Record<string, IntrospectableRecipe>> = {
   button: introspect(buttonVariants),
   card: introspect(cardVariants),
   chip: introspect(chipVariants),
+  grid: introspect(gridVariants),
   money: introspect(moneyVariants),
   priceCard: introspect(priceCardVariants),
+  progress: introspect(progressVariants),
   stack: introspect(stackVariants),
+};
+
+/**
+ * Class tables that are not recipes and still have to compile. `Icon` picks a
+ * size class by key rather than through `variants`, which puts it outside the
+ * matrix walk above and inside exactly the same hazard: a renamed `--icon-*`
+ * token leaves a glyph at whatever size an untouched `<svg>` happens to be.
+ */
+const CLASS_TABLES: Readonly<Record<string, Readonly<Record<string, string>>>> = {
+  icon: iconSizeClasses,
 };
 
 /** Every combination of every variant, so no branch of a recipe goes unchecked. */
@@ -158,6 +173,18 @@ describe('the compiler, not the class attribute', () => {
       expect(dead, `${name} renders classes with no CSS behind them: ${dead.join(', ')}`).toEqual(
         [],
       );
+    });
+  }
+
+  for (const [name, table] of Object.entries(CLASS_TABLES)) {
+    it(`every class in the ${name} table compiles to a rule`, () => {
+      const dead = Object.values(table)
+        .flatMap((value) => value.split(/\s+/))
+        .filter(Boolean)
+        .filter((className) => !EMITS_NO_CSS_BY_DESIGN.has(className))
+        .filter((className) => !compilesToARule(className));
+
+      expect(dead, `${name} names classes with no CSS behind them: ${dead.join(', ')}`).toEqual([]);
     });
   }
 });

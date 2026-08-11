@@ -134,3 +134,31 @@ export function declaresFixedHeightPx(className: string): boolean {
 export function compilesToARule(className: string): boolean {
   return compiler.build([className]).includes(asSelector(className));
 }
+
+/**
+ * The declared value of one property inside a class's own rule, verbatim.
+ *
+ * For the properties whose *shape* is the claim rather than their magnitude — a
+ * grid template that has to name a custom property, a transition that has to
+ * name a logical axis — where a resolved pixel count would say nothing.
+ */
+export function declaredValue(className: string, property: string): string | null {
+  const css = compiler.build([className]);
+  const block = ownDeclarations(className, css);
+  if (!block) return null;
+  const match = new RegExp(`(?:^|[;\\s])${property}:\\s*([^;}]+)`).exec(block);
+  return match?.[1]?.trim() ?? null;
+}
+
+/**
+ * One property's value in CSS pixels, resolved through whatever custom property
+ * it lands on. The same route `resolvedMinHeightPx` takes, for the components
+ * whose measurement is not a min-height.
+ */
+export function resolvedPx(className: string, property: string): number | null {
+  const css = compiler.build([className]);
+  const block = ownDeclarations(className, css);
+  if (!block) return null;
+  const match = new RegExp(`(?:^|[;\\s])${property}:\\s*([^;}]+)`).exec(block);
+  return match?.[1] ? toPx(match[1], css) : null;
+}

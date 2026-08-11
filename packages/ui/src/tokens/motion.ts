@@ -85,6 +85,45 @@ export const easings = {
 export type EasingToken = keyof typeof easings;
 
 /**
+ * The one keyframe animation this system defines, and it exists because of a
+ * product rule rather than a taste. `PLAN.html` bans spinners, so a wait whose
+ * length is genuinely unknown still has to be drawn as a bar — and a bar with
+ * nothing to report has exactly one honest gesture available: fill, and fill
+ * again.
+ *
+ * It animates `inline-size`, which is the reason it is correct in Hebrew with no
+ * conditional anywhere. The fill grows from the track's inline start, which is
+ * the right-hand edge on an RTL screen and the left-hand edge on an LTR one. The
+ * obvious alternative — sliding a short bar across the track with `translateX` —
+ * is the same animation running backwards for the majority of this product's
+ * users, because a transform does not follow the writing direction and no
+ * amount of CSS makes it.
+ *
+ * The duration is a number of its own rather than a duration token. The four
+ * tokens say how long a thing takes to *arrive*; this says how often a
+ * reassurance repeats, and at 220ms a repeating reassurance reads as a stutter.
+ */
+export const indeterminateSweep = {
+  /** The Tailwind utility this becomes: `animate-sweep`. */
+  token: 'sweep',
+  /** The `@keyframes` identifier. Prefixed, because keyframe names are global. */
+  name: 'haul-sweep',
+  duration: '1400ms',
+  /** Named into `easings`, so the sweep carries the same mass as everything else. */
+  easing: 'weighted',
+  /** Never starts from nothing: a zero-width bar reads as a bar that is not there. */
+  from: '8%',
+  to: '100%',
+} as const satisfies {
+  token: string;
+  name: string;
+  duration: string;
+  easing: EasingToken;
+  from: string;
+  to: string;
+};
+
+/**
  * Control points for the three bezier curves, for platforms that take numbers
  * rather than a CSS string — React Native's `Easing.bezier(x1, y1, x2, y2)` and
  * Reanimated both want exactly this. `sheet` is absent because it is a spring,

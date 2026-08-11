@@ -1,3 +1,5 @@
+'use client';
+
 import { agorot, formatILS, localised, type Agorot, type Locale } from '@haul/types';
 import type { ComponentProps, ReactElement } from 'react';
 import { variants, type VariantProps } from '../lib/variants.js';

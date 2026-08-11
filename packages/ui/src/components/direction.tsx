@@ -1,3 +1,5 @@
+'use client';
+
 import { DEFAULT_LOCALE, directionFor, type Locale, type TextDirection } from '@haul/types';
 import { createContext, useContext, useMemo, type ComponentProps, type ReactElement } from 'react';
 import { cn } from '../lib/cn.js';
@@ -38,6 +40,16 @@ import { cn } from '../lib/cn.js';
  * Nesting is the whole point of the `locale` prop. A Latin-script driver name,
  * an English street address or an invoice rendered for a foreign client is a
  * subtree with its own direction — that is a provider, not a conditional.
+ *
+ * **`'use client'` is at the top of this file and it is not a formality.**
+ * `createContext` runs at module scope, and a React Server Component cannot
+ * evaluate that module at all — so without the directive this file throws
+ * during the server render. It is re-exported from the barrel, which means the
+ * throw is not confined to whoever wanted a direction: any `import … from
+ * '@haul/ui'` inside an RSC pulls this module in and takes the server build down
+ * with it. That is the whole difference between a component that is unavailable
+ * on the server and a package that is. The rule is asserted structurally in
+ * `__tests__/use-client.test.ts` rather than left to whoever adds the next hook.
  * ---------------------------------------------------------------------------
  */
 

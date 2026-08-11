@@ -24,7 +24,14 @@ export * from './space.js';
 export * from './type.js';
 
 import { darkColors, lightColors } from './color.js';
-import { durationMs, durations, easingCurves, easings, sheetSpring } from './motion.js';
+import {
+  durationMs,
+  durations,
+  easingCurves,
+  easings,
+  indeterminateSweep,
+  sheetSpring,
+} from './motion.js';
 import { radius, radiusPx } from './radius.js';
 import {
   MIN_TAP_TARGET_PX,
@@ -32,6 +39,8 @@ import {
   controlHeightsPx,
   iconSizes,
   iconSizesPx,
+  tileSizes,
+  tileSizesPx,
 } from './size.js';
 import { space, spacePx } from './space.js';
 import {
@@ -68,6 +77,7 @@ export const tokens = {
     easings,
     easingCurves,
     sheetSpring,
+    indeterminateSweep,
   },
   size: {
     minTapTargetPx: MIN_TAP_TARGET_PX,
@@ -75,5 +85,7 @@ export const tokens = {
     controlPx: controlHeightsPx,
     icon: iconSizes,
     iconPx: iconSizesPx,
+    tile: tileSizes,
+    tilePx: tileSizesPx,
   },
 } as const;

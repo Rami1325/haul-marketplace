@@ -119,6 +119,27 @@
   --icon-md: 20px;
   --icon-lg: 24px;
   --icon-xl: 32px;
+
+  /* Tile floors. A grid is told the narrowest a cell may be and derives its own
+     column count, so the item picker needs no breakpoint ladder and stays right
+     for a customer who has turned system text up. In rem for that reason. */
+  --tile-sm: 7rem;
+  --tile-md: 9.5rem;
+  --tile-lg: 13rem;
+
+  /* The indeterminate progress sweep. Spinners are banned, so a wait of unknown
+     length is still a bar; it animates `inline-size` rather than a transform,
+     which is what makes it grow from the reading start in Hebrew. */
+  --animate-sweep: haul-sweep 1400ms var(--ease-weighted) infinite;
+
+  @keyframes haul-sweep {
+    from {
+      inline-size: 8%;
+    }
+    to {
+      inline-size: 100%;
+    }
+  }
 }
 
 /* ---------------------------------------------------------------------------

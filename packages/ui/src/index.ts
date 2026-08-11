@@ -26,7 +26,26 @@ export * from './tokens/index.js';
 // --- composition helpers ----------------------------------------------------
 
 export { cn, type ClassValue } from './lib/cn.js';
+export { percentLabel } from './lib/percent.js';
 export { variants, type VariantFn, type VariantProps, type VariantRecipe } from './lib/variants.js';
+
+// --- the glyph set ----------------------------------------------------------
+
+export {
+  FALLBACK_ICON,
+  ICON_GLYPHS,
+  ICON_STROKE_WIDTH,
+  ICON_VIEWBOX,
+  glyphFor,
+  iconNames,
+  isDirectionalGlyph,
+  isIconName,
+  resolveIconName,
+  type DirectionalGlyph,
+  type IconDefinition,
+  type IconGlyph,
+  type IconName,
+} from './icons/index.js';
 
 // --- direction: Hebrew and RTL are the default ------------------------------
 
@@ -42,8 +61,10 @@ export {
 
 // --- layout -----------------------------------------------------------------
 
+export { Grid, gridVariants, type GridProps, type GridVariantProps } from './components/grid.js';
 export {
   Stack,
+  stackGapClasses,
   stackVariants,
   type StackProps,
   type StackVariantProps,
@@ -62,6 +83,19 @@ export {
 export { Card, cardVariants, type CardProps } from './components/card.js';
 export { Chip, chipVariants, type ChipProps, type ChipSize } from './components/chip.js';
 export {
+  COUNTDOWN_COPY,
+  COUNTDOWN_THRESHOLDS_SECONDS,
+  Countdown,
+  announcedThreshold,
+  countdownAnnouncement,
+  formatClock,
+  remainingTime,
+  type CountdownPhrase,
+  type CountdownProps,
+  type RemainingTime,
+} from './components/countdown.js';
+export { Icon, iconSizeClasses, type IconProps } from './components/icon.js';
+export {
   Input,
   InputContent,
   LtrRun,
@@ -72,6 +106,31 @@ export {
   type InputProps,
   type InputSize,
 } from './components/input.js';
+export {
+  LiveRegion,
+  LiveRegionProvider,
+  useAnnounce,
+  type Announce,
+  type LiveRegionProps,
+  type LiveRegionProviderProps,
+  type Politeness,
+} from './components/live-region.js';
+export {
+  Progress,
+  progressVariants,
+  type ProgressProps,
+  type ProgressSize,
+  type ProgressVariants,
+} from './components/progress.js';
+export {
+  RadioGroup,
+  firstSelectableIndex,
+  nextRadioIndex,
+  radioKeyMove,
+  type RadioGroupProps,
+  type RadioMove,
+  type RadioOption,
+} from './components/radio-group.js';
 export {
   SHEET_COPY,
   Sheet,
