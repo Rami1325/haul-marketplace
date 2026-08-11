@@ -2,13 +2,9 @@ import { DEFAULT_LOCALE, directionFor } from '@haul/types';
 import { cleanup, render } from '@testing-library/react';
 import type { ReactElement } from 'react';
 import { afterEach, describe, expect, it } from 'vitest';
-import {
-  DEFAULT_DIRECTION,
-  DirectionProvider,
-  directionAttributes,
-  useDirection,
-} from '../components/direction.js';
+import { DEFAULT_DIRECTION, DirectionProvider, useDirection } from '../components/direction.js';
 import { Stack, stackGapClasses, stackVariants } from '../components/stack.js';
+import { directionAttributes } from '../lib/direction-attributes.js';
 import { spaceTokens } from '../tokens/space.js';
 
 /**

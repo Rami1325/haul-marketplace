@@ -80,15 +80,12 @@ export function useDirection(): DirectionContextValue {
 }
 
 /**
- * The attributes a host document has to carry. Next.js sets these on `<html>`
- * and React Native has no DOM at all, so the pair is exported separately from
- * the component that usually applies it — otherwise an app root would have to
- * re-derive `dir` from the locale by hand, which is the derivation this module
- * exists to own.
+ * The `<html>` attributes live in `../lib/direction-attributes.js`, not here.
+ * They are the half of this module a *server* root layout calls, and `'use
+ * client'` marks a module rather than a component — every export of this file is
+ * a client reference, so a plain function declared here cannot be invoked during
+ * a server render at all. See that file; the move is the fix, not a tidy-up.
  */
-export function directionAttributes(locale: Locale): { dir: TextDirection; lang: Locale } {
-  return { dir: directionFor(locale), lang: locale };
-}
 
 export interface DirectionProviderProps extends Omit<ComponentProps<'div'>, 'dir' | 'lang'> {
   locale?: Locale;

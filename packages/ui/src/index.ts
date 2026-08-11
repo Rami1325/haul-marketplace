@@ -49,10 +49,15 @@ export {
 
 // --- direction: Hebrew and RTL are the default ------------------------------
 
+// `directionAttributes` is exported from `lib/`, on its own line, because it is
+// the one piece of this area a Server Component calls rather than renders — and
+// `components/direction.js` is a `'use client'` module, which makes every export
+// of it a client reference. Folding it back into the block below compiles
+// perfectly and fails at the first `<html {...directionAttributes(locale)}>`.
+export { directionAttributes } from './lib/direction-attributes.js';
 export {
   DEFAULT_DIRECTION,
   DirectionProvider,
-  directionAttributes,
   directionValueFor,
   useDirection,
   type DirectionContextValue,
