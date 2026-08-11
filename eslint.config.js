@@ -59,6 +59,12 @@ export default tseslint.config(
       // Committed agent output, kept verbatim so the catalog derivation stays
       // reproducible. Linting it would invite editing it.
       'packages/config/src/data/**',
+      // Written by `next build`, and it references its own generated route
+      // tables as `./.next/types/routes.d.ts` — a relative import with a `.ts`
+      // extension, which is precisely what the rule below forbids. Widening that
+      // rule to admit `.ts` would retire the one check that keeps this repo's
+      // packages loadable by Node, in exchange for a file we do not write.
+      '**/next-env.d.ts',
     ],
   },
 
@@ -116,12 +122,15 @@ export default tseslint.config(
   },
 
   {
-    name: 'haul/library-source',
-    files: ['packages/*/src/**/*.{ts,tsx}'],
+    name: 'haul/product-source',
+    files: ['packages/*/src/**/*.{ts,tsx}', 'apps/*/src/**/*.{ts,tsx}'],
     // `migrate` and `seed` are command-line entry points whose entire output is
     // the terminal. Everything else under `packages/*/src` is library code that
     // does not know whether it is running on a server, in a browser tab or on a
     // driver's phone, so it has no business writing to a console it cannot see.
+    // An app is worse, not better: a `console.log` there runs on a customer's
+    // device or in a production server log, and the one under `apps/web` would
+    // be printing an address or a price into whatever is collecting stdout.
     ignores: ['packages/db/src/migrate.ts', 'packages/db/src/seed.ts'],
     rules: {
       'no-console': 'error',
@@ -130,9 +139,9 @@ export default tseslint.config(
 
   /**
    * Type-aware linting, scoped to `src`. `projectService` resolves each file
-   * against the nearest tsconfig, which works cleanly for package sources
-   * because every package's tsconfig includes exactly `src/**`. Build scripts
-   * and config files sit outside those includes, so they get syntax-only
+   * against the nearest tsconfig, which works cleanly for package and app
+   * sources alike because every one of those tsconfigs includes `src/**`. Build
+   * scripts and config files sit outside those includes, so they get syntax-only
    * linting below rather than an out-of-project error — the alternative is a
    * second tsconfig per package that exists only to satisfy the linter.
    *
@@ -146,7 +155,7 @@ export default tseslint.config(
    */
   {
     name: 'haul/typescript-type-aware',
-    files: ['packages/*/src/**/*.{ts,tsx}'],
+    files: ['packages/*/src/**/*.{ts,tsx}', 'apps/*/src/**/*.{ts,tsx}'],
     languageOptions: {
       parserOptions: {
         projectService: true,
@@ -162,20 +171,28 @@ export default tseslint.config(
   },
 
   /**
-   * The design system is the only package that renders. `react-hooks` v7 is the
-   * whole React Compiler rule set, which is the reason to have it: it rejects
-   * the mutations and conditional hook calls that make a component render
-   * correctly today and incorrectly the moment the compiler memoises it.
+   * The two places React is written. `react-hooks` v7 is the whole React
+   * Compiler rule set, which is the reason to have it: it rejects the mutations
+   * and conditional hook calls that make a component render correctly today and
+   * incorrectly the moment the compiler memoises it.
    *
    * From `eslint-plugin-react` only the rules that describe real defects are
    * enabled. Its `recommended` preset is built for a JavaScript codebase and
    * spends itself on `prop-types` and `display-name`, both of which TypeScript
    * already answers. `jsx-key` is the one it has that nothing else does, and a
    * missing key is a rendering bug that survives every type check.
+   *
+   * The rule set is shared between the design system and the app rather than
+   * relaxed for the app. A component in `apps/web` is not held to a lower
+   * standard than one in `packages/ui` because of where the file happens to
+   * sit — the customer meets both of them on the same screen. The one rule the
+   * app has needed to step around so far is `react/no-danger`, for the inline
+   * theme script that has to run before first paint, and it steps around it at
+   * the line with a reason attached rather than by leaving the rule off here.
    */
   {
-    name: 'haul/ui',
-    files: ['packages/ui/**/*.{ts,tsx}'],
+    name: 'haul/react',
+    files: ['packages/ui/**/*.{ts,tsx}', 'apps/web/**/*.{ts,tsx}'],
     extends: [reactHooks.configs.flat.recommended],
     plugins: { react },
     // The React version is stated rather than detected on purpose.

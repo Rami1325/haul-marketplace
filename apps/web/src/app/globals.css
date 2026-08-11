@@ -1,0 +1,71 @@
+/* ---------------------------------------------------------------------------
+ * globals.css — the only stylesheet this app has
+ * ---------------------------------------------------------------------------
+ * Four lines of CSS and two of them are load-bearing in ways that fail silently.
+ * Both failures render a page that looks broken and pass every unit test in
+ * `@haul/ui`, so they are written down here and asserted in
+ * `src/__tests__/tailwind.node.test.ts`.
+ *
+ * ## `tailwindcss` is imported once, and not from this file
+ *
+ * `@haul/ui/theme.css` already opens with `@import "tailwindcss"` — it has to,
+ * because it is the file that declares `@theme static`, and a theme block with
+ * no Tailwind behind it produces no utilities at all. Importing it again here
+ * would emit preflight and the entire utility layer twice, and the second copy
+ * wins the cascade on equal specificity. The app therefore imports the design
+ * system and nothing else.
+ *
+ * ## The second `@source` is not redundant, and deleting it breaks the product
+ *
+ * Tailwind finds utilities by scanning source *text*, and its automatic
+ * detection deliberately never walks `node_modules`. pnpm links `@haul/ui` into
+ * `node_modules/@haul/ui` as a symlink to `packages/ui`, so every class the
+ * design system renders — every Button height, the Price Card's whole surface,
+ * the money utility — is invisible to the scanner unless something points it at
+ * the real workspace path. Without that glob the components still render a full
+ * `class` attribute with *no CSS behind it*: unstyled controls on a white page,
+ * in a failure no test inside `@haul/ui` can see, because from inside that
+ * package the classes compile fine.
+ *
+ * The path is relative and it looks fragile. The alternative — a glob through
+ * `node_modules/@haul/ui` — is the fragile one: it resolves to a symlink whose
+ * traversal is a platform question, and Tailwind's own ignore rules take
+ * precedence over it.
+ *
+ * ## Order
+ *
+ * Faces first. `--font-display` in the theme names `'Heebo Variable'`, and a
+ * stylesheet that references a family before defining it sends whoever reads it
+ * hunting for where it came from. CSS also requires every `@import` to precede
+ * every other rule, which is why the `@source` globs sit below rather than above.
+ *
+ * ## Why all five subsets, rather than "just Hebrew"
+ *
+ * Fontsource 5.3 ships one entry point per axis, not per subset: `wght.css`
+ * declares every subset as its own `@font-face` with a `unicode-range`, and the
+ * browser fetches only the files a page's characters actually need. That range
+ * split is the reason this import matters more than it looks. ₪ (U+20AA) is in
+ * the `hebrew` range and in `latin-ext`; it is **not** in bare `latin`, which
+ * carries U+20AC for the euro and stops. Load a Latin-only subset and the
+ * largest glyph on the Price Card falls back to a system face — a shekel sign in
+ * a different typeface, next to Heebo digits, on the number this company's whole
+ * promise rests on.
+ * --------------------------------------------------------------------------- */
+
+@import '@fontsource-variable/heebo/wght.css';
+@import '@fontsource-variable/rubik/wght.css';
+@import '@fontsource-variable/roboto-mono/wght.css';
+
+@import '@haul/ui/theme.css';
+
+@source '../**/*.{ts,tsx}';
+@source '../../../../packages/ui/src/**/*.{ts,tsx}';
+
+/* Test sources are scanned by neither, and that is a correctness rule rather
+ * than a size one. A suite proving that a physical direction utility gets
+ * flagged, or that an interpolated class compiles to nothing, is full of class
+ * names written as counter-examples — and a scanner cannot tell a fixture from
+ * an intention. Left in, this RTL-first product would ship the exact physical
+ * rules whose only origin is a test asserting nobody may write one. */
+@source not '../__tests__/**';
+@source not '../../../../packages/ui/src/__tests__/**';

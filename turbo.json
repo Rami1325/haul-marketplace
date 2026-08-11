@@ -6,6 +6,7 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
+      "env": ["NEXT_PUBLIC_*", "HAUL_*", "PAYMENT_PROVIDER", "GEO_PROVIDER"],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
     "dev": {

@@ -1,0 +1,59 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    // The base sets `module: ESNext` / `moduleResolution: Bundler`, which is
+    // right for a package that is only ever read by a bundler and wrong here,
+    // for a reason that took a failing build to find. Relative imports across
+    // this repo carry a `.js` extension — an ESLint rule enforces it, because
+    // Node's ESM resolver refuses anything else — and **Turbopack only
+    // substitutes `.ts` for that `.js` when the project's tsconfig asks for
+    // Node16/NodeNext resolution.** Under `Bundler` it takes the specifier
+    // literally, and `next build` fails to resolve every single relative import
+    // inside `@haul/types` and `@haul/ui`. Webpack fails the same way; its
+    // `experimental.extensionAlias` escape hatch is listed as unsupported under
+    // Turbopack, which is the default builder in Next 16.
+    //
+    // So this is not a preference. It is the setting that makes the compiler
+    // agree with Node and with the bundler at once, which is what the extension
+    // rule was for in the first place. The cost is that imports through the
+    // `@/` alias are fully specified too — `@/i18n/locales.js` — and that is
+    // the same rule the packages already live under.
+    //
+    // It also reaches two of Next's own subpaths, which is the part that looks
+    // like a mistake and is not: `next/navigation.js` and `next/server.js`.
+    // Next ships no `exports` map, so under NodeNext those subpaths resolve by
+    // file and the extension is required. They are the only bare specifiers in
+    // this app carrying one, they are safe only for as long as that stays true,
+    // and nothing but `next build` would catch it if Next ever adds the map —
+    // so grep for `next/*.js` before blaming anything else after a Next upgrade.
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    // `preserve`, not the `react-jsx` that `@haul/ui` uses: Next owns the JSX
+    // transform and needs the JSX left intact to decide per file whether it is
+    // compiling a server or a client component.
+    "jsx": "preserve",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": ["node"],
+    // Next writes `next-env.d.ts` and the typed-route tables as plain JS/TS that
+    // TypeScript has to be willing to read.
+    "allowJs": true,
+    // The base turns these on for the library packages, whose consumers need
+    // declarations. Nothing consumes an application, and `noEmit` means nothing
+    // would be written anyway — TypeScript rejects `declarationMap` without
+    // `declaration`, so both have to be answered here rather than one.
+    "declaration": false,
+    "declarationMap": false,
+    "plugins": [{ "name": "next" }],
+    "paths": { "@/*": ["./src/*"] }
+  },
+  "include": [
+    "next-env.d.ts",
+    "next.config.ts",
+    "vitest.config.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": ["node_modules", ".next"]
+}

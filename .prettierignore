@@ -12,6 +12,12 @@ packages/config/src/data/*.json
 packages/config/scripts/raw-workflow-output.json
 packages/db/migrations/
 
+# Next rewrites this on every build and the file says so in its own body ("NOTE:
+# This file should not be edited"). Formatting it means `next build` reverts the
+# formatting and `format:check` fails on a tree nobody touched. It is committed
+# rather than ignored by git so a fresh clone type-checks without building first.
+apps/*/next-env.d.ts
+
 # Lockfiles and machine state.
 pnpm-lock.yaml
 .turbo/
