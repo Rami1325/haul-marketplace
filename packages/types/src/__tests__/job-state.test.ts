@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   Actor,
   JobEvent,
+  JobEventSchema,
   JobState,
   MoneyEffect,
   TRANSITIONS,
@@ -405,6 +406,27 @@ describe('illegal transitions', () => {
   });
 });
 
+describe('parsing an event off the wire', () => {
+  it('drives a real transition without a cast', () => {
+    // The reason the schema exists: a server action reads an event name from a
+    // request body and hands it straight to the machine.
+    const event = JobEventSchema.parse('book_now');
+    expect(attemptTransition(JobState.Quoted, event, readyContext(Actor.Customer))).toMatchObject({
+      ok: true,
+      to: JobState.Matching,
+    });
+  });
+
+  it('refuses a name nobody defined', () => {
+    // Without this, an unknown string reaches the machine as a JobEvent and
+    // comes back as "no such transition" — a validation error wearing a state
+    // machine's error message.
+    for (const bogus of ['', 'BOOK_NOW', 'book now', 'cancel', 'settle_now']) {
+      expect(JobEventSchema.safeParse(bogus).success, bogus).toBe(false);
+    }
+  });
+});
+
 describe('structural invariants of the table', () => {
   it('resolves (from, event, actor) to exactly one transition', () => {
     // attemptTransition takes the first permitted match. If a triple ever
@@ -447,6 +469,15 @@ describe('structural invariants of the table', () => {
     }
     for (const state of Object.values(JobState)) {
       expect(reached.has(state), `${state} is unreachable`).toBe(true);
+    }
+  });
+
+  it('exposes every event it defines to the parser', () => {
+    // An event the machine fires but the schema rejects is a server action that
+    // cannot be reached at all; the reverse is a name nothing will ever accept.
+    expect([...JobEventSchema.options].sort()).toEqual(Object.values(JobEvent).sort());
+    for (const transition of TRANSITIONS) {
+      expect(JobEventSchema.safeParse(transition.event).success, transition.event).toBe(true);
     }
   });
 

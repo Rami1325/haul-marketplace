@@ -84,10 +84,134 @@ export const ProofPhotoSchema = z.object({
 });
 export type ProofPhoto = z.infer<typeof ProofPhotoSchema>;
 
+/**
+ * Why a job was cancelled — a closed vocabulary, not free text.
+ *
+ * A string column cannot be counted or keyed off. Ops cannot see that a fifth
+ * of last week's cancellations were "no driver found" rather than "price too
+ * high", and the customer-facing copy cannot tell "we could not find you a
+ * driver" apart from "you changed your mind". Both of those are the difference
+ * between a fixable problem and a number in a report.
+ *
+ * Adding a member is a product decision: each one is a bucket somebody will
+ * read a percentage of, and a line of copy somebody has to write.
+ */
+export const CancellationReason = {
+  /** The move is off entirely. The plain case, and the honest baseline. */
+  CustomerChangedPlans: 'customer_changed_plans',
+  /** Lost to another mover. The one code that reads directly on price and speed. */
+  CustomerFoundAnotherMover: 'customer_found_another_mover',
+  /** Kept the move, dropped us over the number. Distinct from the above on purpose. */
+  PriceTooHigh: 'price_too_high',
+  /** Still moving, on another date. A rebooking, not a lost customer. */
+  DateChanged: 'date_changed',
+  /** Dispatch exhausted every wave and the human escalation. On us; never chargeable. */
+  NoDriverFound: 'no_driver_found',
+  /** A committed driver dropped the job. Counts against the driver, not the customer. */
+  DriverCancelled: 'driver_cancelled',
+  /** Crew could not get to the door — blocked street, wrong location, no way in. */
+  AddressUnreachable: 'address_unreachable',
+  /** Crew refused an item on the spot. A gas cylinder is not an argument to have. */
+  ItemRefusedAtPickup: 'item_refused_at_pickup',
+  /** A human on the console pulled it. The specifics belong in `reasonText`. */
+  OpsCancelled: 'ops_cancelled',
+  /** The hold or the capture failed and could not be recovered. */
+  PaymentFailed: 'payment_failed',
+  /** The same move booked twice. A cancellation on paper only — no demand was lost. */
+  DuplicateBooking: 'duplicate_booking',
+} as const;
+export type CancellationReason = (typeof CancellationReason)[keyof typeof CancellationReason];
+export const CancellationReasonSchema = z.enum([
+  CancellationReason.CustomerChangedPlans,
+  CancellationReason.CustomerFoundAnotherMover,
+  CancellationReason.PriceTooHigh,
+  CancellationReason.DateChanged,
+  CancellationReason.NoDriverFound,
+  CancellationReason.DriverCancelled,
+  CancellationReason.AddressUnreachable,
+  CancellationReason.ItemRefusedAtPickup,
+  CancellationReason.OpsCancelled,
+  CancellationReason.PaymentFailed,
+  CancellationReason.DuplicateBooking,
+]);
+
+/**
+ * The vocabulary with its copy, ordered customer-attributable first, then the
+ * codes the platform or the driver owns, then the ones only ops and the system
+ * ever write — a customer is never offered "payment failed" as a choice.
+ *
+ * Labels sit beside the code rather than in each app so one bucket cannot end
+ * up with three names, and they are worded neutrally rather than in the first
+ * person because the same string has to read correctly in the cancellation
+ * sheet and in a column ops reads a percentage off.
+ */
+export const CANCELLATION_REASONS: ReadonlyArray<{
+  code: CancellationReason;
+  labelHe: string;
+  labelEn: string;
+}> = [
+  {
+    code: CancellationReason.CustomerChangedPlans,
+    labelHe: 'הלקוח שינה תוכניות',
+    labelEn: 'Customer changed plans',
+  },
+  {
+    code: CancellationReason.CustomerFoundAnotherMover,
+    labelHe: 'הלקוח מצא מוביל אחר',
+    labelEn: 'Customer found another mover',
+  },
+  {
+    code: CancellationReason.PriceTooHigh,
+    labelHe: 'המחיר גבוה מדי',
+    labelEn: 'Price too high',
+  },
+  {
+    code: CancellationReason.DateChanged,
+    labelHe: 'התאריך השתנה',
+    labelEn: 'Date changed',
+  },
+  {
+    code: CancellationReason.NoDriverFound,
+    labelHe: 'לא נמצא מוביל',
+    labelEn: 'No driver found',
+  },
+  {
+    code: CancellationReason.DriverCancelled,
+    labelHe: 'המוביל ביטל',
+    labelEn: 'Driver cancelled',
+  },
+  {
+    code: CancellationReason.AddressUnreachable,
+    labelHe: 'לא ניתן להגיע לכתובת',
+    labelEn: 'Address unreachable',
+  },
+  {
+    code: CancellationReason.ItemRefusedAtPickup,
+    labelHe: 'פריט נפסל להובלה באיסוף',
+    labelEn: 'Item refused at pickup',
+  },
+  {
+    code: CancellationReason.OpsCancelled,
+    labelHe: 'בוטל על ידי המוקד',
+    labelEn: 'Cancelled by ops',
+  },
+  {
+    code: CancellationReason.PaymentFailed,
+    labelHe: 'התשלום נכשל',
+    labelEn: 'Payment failed',
+  },
+  {
+    code: CancellationReason.DuplicateBooking,
+    labelHe: 'הזמנה כפולה',
+    labelEn: 'Duplicate booking',
+  },
+];
+
 export const CancellationSchema = z.object({
   cancelledBy: z.enum(['customer', 'driver', 'ops', 'system']),
   cancelledAt: z.coerce.date(),
-  reasonCode: z.string().max(64),
+  reasonCode: CancellationReasonSchema,
+  /** The specifics behind the code. Read by a human, never grouped on. */
   reasonText: z.string().max(500).nullable().default(null),
   /** Whether a driver had already committed — decides whether a fee applies. */
   afterDriverCommitted: z.boolean(),

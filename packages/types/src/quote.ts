@@ -203,6 +203,22 @@ export function isQuoteExpired(quote: Pick<Quote, 'expiresAt'>, now: Date = new 
 }
 
 /**
+ * Seconds left on the lock, clamped at zero and rounded up.
+ *
+ * The Price Lock screen counts down on this, so a lapsed quote has to read 0:00
+ * rather than a negative number ticking under the total — and a countdown that
+ * still has 400ms on it has to read 1, not 0. Identical arithmetic to the
+ * driver-side offer countdown: two timers on the same event that disagree by a
+ * second are two timers that get bug reports.
+ */
+export function quoteSecondsRemaining(
+  quote: Pick<Quote, 'expiresAt'>,
+  now: Date = new Date(),
+): number {
+  return Math.max(0, Math.ceil((quote.expiresAt.getTime() - now.getTime()) / 1000));
+}
+
+/**
  * The breakdown must always add up. A receipt whose lines don't sum to the total
  * is the exact failure mode this product exists to prevent, so it is checked in
  * the type layer rather than trusted.

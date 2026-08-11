@@ -149,6 +149,31 @@ export const JobEvent = {
 } as const;
 export type JobEvent = (typeof JobEvent)[keyof typeof JobEvent];
 
+/**
+ * Events cross the wire as strings — a driver's tap, a POST from the ops
+ * console, a webhook. Parsing one instead of casting it is what keeps the
+ * machine's entry point honest: an event name nobody defined is rejected at the
+ * boundary, rather than travelling into `attemptTransition` as a `JobEvent` the
+ * type system was told to believe in.
+ */
+export const JobEventSchema = z.enum([
+  JobEvent.BookNow,
+  JobEvent.BookScheduled,
+  JobEvent.OpenDispatch,
+  JobEvent.ExpireQuote,
+  JobEvent.DriverAccept,
+  JobEvent.MatchTimeout,
+  JobEvent.CancelBeforeMatch,
+  JobEvent.CancelAfterMatch,
+  JobEvent.StartTrip,
+  JobEvent.ArriveAtPickup,
+  JobEvent.ConfirmLoaded,
+  JobEvent.ArriveAtDropoff,
+  JobEvent.Complete,
+  JobEvent.Settle,
+  JobEvent.AbortInProgress,
+]);
+
 // --- money effects ----------------------------------------------------------
 
 export const MoneyEffect = {
