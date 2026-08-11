@@ -23,7 +23,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "ac",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "ac_outdoor_compressor",
@@ -53,7 +54,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "compressor",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "ac_split_indoor",
@@ -83,7 +85,8 @@
     "fragile": true,
     "heavyItemSurchargeKey": null,
     "icon": "ac",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": true
   },
   {
     "id": "ac_window",
@@ -107,7 +110,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "ac",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "air_fryer",
@@ -132,7 +136,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "fryer",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "coffee_machine",
@@ -159,7 +164,8 @@
     "fragile": true,
     "heavyItemSurchargeKey": null,
     "icon": "coffee",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "cooktop_hob",
@@ -189,7 +195,8 @@
     "fragile": true,
     "heavyItemSurchargeKey": null,
     "icon": "stove",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "dehumidifier",
@@ -214,7 +221,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "dehumidifier",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "dishwasher",
@@ -239,7 +247,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "dishwasher",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "dryer_tumble",
@@ -266,7 +275,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "dryer",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "electric_heater",
@@ -294,7 +304,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "heater",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "electric_water_heater",
@@ -321,7 +332,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "boiler",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "fan_standing",
@@ -344,7 +356,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "fan",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "freezer_chest",
@@ -369,7 +382,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "freezer",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "freezer_upright",
@@ -396,7 +410,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "freezer",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "fridge_large",
@@ -427,7 +442,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "fridge",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": true
   },
   {
     "id": "fridge_side_by_side",
@@ -456,7 +472,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "fridge",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "fridge_small",
@@ -487,7 +504,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "fridge",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "fridge_two_door",
@@ -518,7 +536,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "fridge",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "hot_water_urn",
@@ -545,7 +564,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "urn",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "hotplate_shabbat",
@@ -567,7 +587,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "appliance",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "kitchen_small_appliances",
@@ -592,7 +613,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "appliance",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "microwave",
@@ -617,7 +639,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "microwave",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "oven_built_in",
@@ -642,7 +665,8 @@
     "fragile": true,
     "heavyItemSurchargeKey": null,
     "icon": "oven",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "oven_freestanding",
@@ -672,7 +696,8 @@
     "fragile": true,
     "heavyItemSurchargeKey": null,
     "icon": "oven",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "robot_vacuum",
@@ -697,7 +722,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "vacuum",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "sewing_machine",
@@ -721,7 +747,8 @@
     "fragile": true,
     "heavyItemSurchargeKey": null,
     "icon": "sewing",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "solar_panel_collector",
@@ -748,7 +775,8 @@
     "fragile": true,
     "heavyItemSurchargeKey": null,
     "icon": "solar",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "solar_water_heater_tank",
@@ -777,7 +805,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "boiler",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "toaster_oven",
@@ -803,7 +832,8 @@
     "fragile": true,
     "heavyItemSurchargeKey": null,
     "icon": "toaster",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "vacuum_cleaner",
@@ -830,7 +860,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "vacuum",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "washing_machine",
@@ -858,7 +889,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "washer",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": true
   },
   {
     "id": "water_bar",
@@ -888,7 +920,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "water",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "wine_cooler",
@@ -913,7 +946,8 @@
     "fragile": true,
     "heavyItemSurchargeKey": null,
     "icon": "wine",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "bedding_box",
@@ -939,7 +973,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "box",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": true
   },
   {
     "id": "box_books",
@@ -967,7 +1002,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "box",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "box_dishes",
@@ -997,7 +1033,8 @@
     "fragile": true,
     "heavyItemSurchargeKey": null,
     "icon": "box",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "box_large",
@@ -1025,7 +1062,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "box",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "box_medium",
@@ -1054,7 +1092,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "box",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": true
   },
   {
     "id": "box_small",
@@ -1084,7 +1123,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "box",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": true
   },
   {
     "id": "duffel_bag",
@@ -1114,7 +1154,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "bag",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "helmet_gear_box",
@@ -1144,7 +1185,8 @@
     "fragile": true,
     "heavyItemSurchargeKey": null,
     "icon": "helmet",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "storage_crate_plastic",
@@ -1173,7 +1215,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "crate",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "suitcase_large",
@@ -1200,7 +1243,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "suitcase",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "suitcase_small",
@@ -1228,7 +1272,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "suitcase",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "wardrobe_box_hanging",
@@ -1253,7 +1298,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "box",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "computer_monitor",
@@ -1279,7 +1325,8 @@
     "fragile": true,
     "heavyItemSurchargeKey": null,
     "icon": "monitor",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "desktop_computer",
@@ -1307,7 +1354,8 @@
     "fragile": true,
     "heavyItemSurchargeKey": null,
     "icon": "computer",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "piano_digital",
@@ -1335,7 +1383,8 @@
     "fragile": true,
     "heavyItemSurchargeKey": null,
     "icon": "piano",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "printer",
@@ -1362,7 +1411,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "printer",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "speakers_stereo_system",
@@ -1395,7 +1445,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "speaker",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "tv_32",
@@ -1423,7 +1474,8 @@
     "fragile": true,
     "heavyItemSurchargeKey": null,
     "icon": "tv",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "tv_55",
@@ -1454,7 +1506,8 @@
     "fragile": true,
     "heavyItemSurchargeKey": null,
     "icon": "tv",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": true
   },
   {
     "id": "tv_75",
@@ -1482,7 +1535,8 @@
     "fragile": true,
     "heavyItemSurchargeKey": null,
     "icon": "tv",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "dumbbell_set",
@@ -1512,7 +1566,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "dumbbell",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "exercise_bike",
@@ -1538,7 +1593,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "bike",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "multi_gym",
@@ -1567,7 +1623,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": "gym_machine_multi",
     "icon": "gym",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "punching_bag",
@@ -1592,7 +1649,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "punchbag",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "treadmill",
@@ -1618,7 +1676,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": "treadmill",
     "icon": "treadmill",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "weight_bench",
@@ -1644,7 +1703,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "bench",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "armchair",
@@ -1673,7 +1733,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "armchair",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "armchair_recliner",
@@ -1702,7 +1763,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "recliner",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "bar_stool",
@@ -1730,7 +1792,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "stool",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "bathroom_vanity",
@@ -1751,7 +1814,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "cabinet",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "bed_baby_cot",
@@ -1778,7 +1842,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "crib",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "bed_bunk",
@@ -1804,7 +1869,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "bed",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "bed_double_frame",
@@ -1832,7 +1898,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "bed",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": true
   },
   {
     "id": "bed_folding_guest",
@@ -1855,7 +1922,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "bed",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "bed_headboard",
@@ -1879,7 +1947,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "bed",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "bed_king_frame",
@@ -1905,7 +1974,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "bed",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "bed_single_frame",
@@ -1933,7 +2003,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "bed",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": true
   },
   {
     "id": "bed_sofa_single_with_trundle",
@@ -1958,7 +2029,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "bed",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "bed_storage_base",
@@ -1985,7 +2057,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "bed",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "bed_three_quarter_frame",
@@ -2007,7 +2080,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "bed",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "bedroom_bench",
@@ -2032,7 +2106,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "bench",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "chest_of_drawers",
@@ -2059,7 +2134,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "drawers",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": true
   },
   {
     "id": "conference_table",
@@ -2084,7 +2160,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "table",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "desk_computer",
@@ -2111,7 +2188,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "desk",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": true
   },
   {
     "id": "desk_hutch_shelf",
@@ -2136,7 +2214,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "shelf",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "desk_office",
@@ -2164,7 +2243,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "desk",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": true
   },
   {
     "id": "desk_standing_electric",
@@ -2191,7 +2271,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "desk",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "dining_chair",
@@ -2222,7 +2303,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "chair",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": true
   },
   {
     "id": "dining_table_4_seat",
@@ -2251,7 +2333,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "table",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "dining_table_6_seat",
@@ -2279,7 +2362,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "table",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": true
   },
   {
     "id": "dining_table_8_seat",
@@ -2306,7 +2390,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "table",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "dining_table_glass",
@@ -2332,7 +2417,8 @@
     "fragile": true,
     "heavyItemSurchargeKey": null,
     "icon": "table",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "dressing_table",
@@ -2358,7 +2444,8 @@
     "fragile": true,
     "heavyItemSurchargeKey": null,
     "icon": "vanity",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "filing_cabinet",
@@ -2386,7 +2473,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "cabinet",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "folding_chair",
@@ -2411,7 +2499,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "chair",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "folding_table",
@@ -2438,7 +2527,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "table",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "high_chair_baby",
@@ -2466,7 +2556,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "chair",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "living_bookshelf",
@@ -2498,7 +2589,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "bookshelf",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": true
   },
   {
     "id": "living_coffee_table",
@@ -2524,7 +2616,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "table",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": true
   },
   {
     "id": "living_coffee_table_glass",
@@ -2548,7 +2641,8 @@
     "fragile": true,
     "heavyItemSurchargeKey": null,
     "icon": "table",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "living_console_table",
@@ -2575,7 +2669,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "console",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "living_display_cabinet",
@@ -2603,7 +2698,8 @@
     "fragile": true,
     "heavyItemSurchargeKey": null,
     "icon": "cabinet",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "living_ottoman_storage",
@@ -2630,7 +2726,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "ottoman",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "living_pouf",
@@ -2658,7 +2755,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "pouf",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "living_rocking_chair",
@@ -2682,7 +2780,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "chair",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "living_shoe_cabinet",
@@ -2709,7 +2808,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "cabinet",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "living_side_table",
@@ -2735,7 +2835,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "table",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "living_tv_unit",
@@ -2764,7 +2865,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "tv-unit",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "living_wall_shelf",
@@ -2790,7 +2892,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "shelf",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "mattress_baby",
@@ -2813,7 +2916,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "mattress",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "mattress_double",
@@ -2839,7 +2943,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "mattress",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": true
   },
   {
     "id": "mattress_king",
@@ -2863,7 +2968,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "mattress",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "mattress_single",
@@ -2889,7 +2995,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "mattress",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": true
   },
   {
     "id": "mattress_three_quarter",
@@ -2909,7 +3016,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "mattress",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "nightstand",
@@ -2934,7 +3042,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "nightstand",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": true
   },
   {
     "id": "office_cabinet_tall",
@@ -2961,7 +3070,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "cabinet",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "office_chair",
@@ -2990,7 +3100,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "chair",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": true
   },
   {
     "id": "printer_stand",
@@ -3016,7 +3127,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "cart",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "sideboard_buffet",
@@ -3045,7 +3157,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "cabinet",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "sofa_2_seat",
@@ -3077,7 +3190,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "sofa",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": true
   },
   {
     "id": "sofa_3_seat",
@@ -3107,7 +3221,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "sofa",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": true
   },
   {
     "id": "sofa_4_seat",
@@ -3134,7 +3249,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "sofa",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "sofa_bed",
@@ -3162,7 +3278,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "sofa",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "sofa_corner",
@@ -3190,7 +3307,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "sofa",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "sofa_module",
@@ -3217,7 +3335,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "sofa",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "trolley_serving_cart",
@@ -3243,7 +3362,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "cart",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "utility_cabinet_balcony",
@@ -3265,7 +3385,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "cabinet",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "wardrobe_2_door",
@@ -3291,7 +3412,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "wardrobe",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": true
   },
   {
     "id": "wardrobe_3_door",
@@ -3315,7 +3437,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "wardrobe",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": true
   },
   {
     "id": "wardrobe_4_door",
@@ -3340,7 +3463,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "wardrobe",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "wardrobe_baby",
@@ -3366,7 +3490,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "wardrobe",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "wardrobe_sliding_door",
@@ -3390,7 +3515,8 @@
     "fragile": true,
     "heavyItemSurchargeKey": null,
     "icon": "wardrobe",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "car_seat_baby",
@@ -3411,7 +3537,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "car-seat",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "cleaning_tools_bundle",
@@ -3441,7 +3568,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "broom",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "clothes_rail",
@@ -3468,7 +3596,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "rail",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "curtains_and_rods",
@@ -3491,7 +3620,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "curtains",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "drum_kit",
@@ -3512,7 +3642,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "music",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "drying_rack",
@@ -3540,7 +3671,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "laundry",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "instrument_case",
@@ -3563,7 +3695,8 @@
     "fragile": true,
     "heavyItemSurchargeKey": null,
     "icon": "music",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "ironing_board",
@@ -3588,7 +3721,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "iron",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "ladder",
@@ -3616,7 +3750,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "ladder",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "living_floor_lamp",
@@ -3644,7 +3779,8 @@
     "fragile": true,
     "heavyItemSurchargeKey": null,
     "icon": "lamp",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "living_mirror_large",
@@ -3672,7 +3808,8 @@
     "fragile": true,
     "heavyItemSurchargeKey": null,
     "icon": "mirror",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "living_rug",
@@ -3698,7 +3835,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "rug",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "living_rug_large",
@@ -3723,7 +3861,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "rug",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "living_wall_art",
@@ -3754,7 +3893,8 @@
     "fragile": true,
     "heavyItemSurchargeKey": null,
     "icon": "frame",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "other_item",
@@ -3777,7 +3917,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "question",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "pet_carrier",
@@ -3807,7 +3948,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "pet",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "plant_potted_large",
@@ -3837,7 +3979,8 @@
     "fragile": true,
     "heavyItemSurchargeKey": null,
     "icon": "plant",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "plant_potted_medium",
@@ -3866,7 +4009,8 @@
     "fragile": true,
     "heavyItemSurchargeKey": null,
     "icon": "plant",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "plant_potted_small",
@@ -3894,7 +4038,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "plant",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "playpen_travel_cot",
@@ -3916,7 +4061,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "cot",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "stroller_double",
@@ -3937,7 +4083,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "stroller",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "stroller_single",
@@ -3960,7 +4107,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "stroller",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "toolbox",
@@ -3987,7 +4135,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "toolbox",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "awning_markiza",
@@ -4008,7 +4157,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "awning",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "bbq_gas_grill",
@@ -4036,7 +4186,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "grill",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "bicycle",
@@ -4064,7 +4215,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "bicycle",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "electric_bike",
@@ -4090,7 +4242,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "ebike",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "electric_scooter",
@@ -4118,7 +4271,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "scooter",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "garden_shed",
@@ -4146,7 +4300,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "shed",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "garden_table_set",
@@ -4175,7 +4330,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "table",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "mangal_charcoal",
@@ -4204,7 +4360,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "grill",
-    "isCommon": true
+    "isCommon": true,
+    "isFirstScreen": false
   },
   {
     "id": "parasol_garden",
@@ -4231,7 +4388,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "umbrella",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "sukkah_kit",
@@ -4254,7 +4412,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "sukkah",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "sun_lounger",
@@ -4281,7 +4440,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "lounger",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "surfboard",
@@ -4309,7 +4469,8 @@
     "fragile": true,
     "heavyItemSurchargeKey": null,
     "icon": "surfboard",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "trampoline_garden",
@@ -4334,7 +4495,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": null,
     "icon": "trampoline",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "aquarium_large",
@@ -4361,7 +4523,8 @@
     "fragile": true,
     "heavyItemSurchargeKey": "aquarium_large",
     "icon": "aquarium",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "artwork_crate",
@@ -4393,7 +4556,8 @@
     "fragile": true,
     "heavyItemSurchargeKey": null,
     "icon": "art",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "gun_safe",
@@ -4419,7 +4583,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": "safe_gun",
     "icon": "safe",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "piano_grand",
@@ -4443,7 +4608,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": "piano_grand",
     "icon": "piano",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "piano_upright",
@@ -4470,7 +4636,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": "piano_upright",
     "icon": "piano",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "pool_table",
@@ -4497,7 +4664,8 @@
     "fragile": false,
     "heavyItemSurchargeKey": "pool_table",
     "icon": "pool",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   },
   {
     "id": "safe_home",
@@ -4524,6 +4692,7 @@
     "fragile": false,
     "heavyItemSurchargeKey": "safe_home",
     "icon": "safe",
-    "isCommon": false
+    "isCommon": false,
+    "isFirstScreen": false
   }
 ]

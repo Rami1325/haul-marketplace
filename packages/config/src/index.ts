@@ -13,6 +13,11 @@ export {
   CITIES,
   TEL_AVIV_CITY,
   cityById,
+  isInServiceArea,
+  serviceAreaFor,
+  ServiceCoverage,
   DEFAULT_CITY_ID,
   type CityConfig,
+  type ServiceAreaCheck,
 } from './cities/index.js';
+export { scheduleInputFor } from './schedule-input.js';

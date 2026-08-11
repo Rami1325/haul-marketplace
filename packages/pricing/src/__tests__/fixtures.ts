@@ -10,7 +10,7 @@ import {
   type CatalogItem,
   type Manifest,
 } from '@haul/types';
-import { RateCardSchema, type RateCard } from '../rate-card.js';
+import { RateCardSchema, advertisedMinimum, type RateCard } from '../rate-card.js';
 
 /**
  * Test fixtures.
@@ -84,7 +84,7 @@ export const TEST_RATE_CARD: RateCard = RateCardSchema.parse({
   },
   maxDemandFactorBps: bps(13_000),
 
-  minimumFare: shekels(250),
+  minimumFare: advertisedMinimum(shekels(250)),
   roundGrossToAgorot: 500,
   driverShareBps: bps(8_000),
 

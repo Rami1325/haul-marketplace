@@ -47,7 +47,12 @@ export interface CraneAssessment {
 }
 
 export interface CraneRules {
-  /** At or above this floor, a walk-up with big furniture implies a crane. */
+  /**
+   * At or above this floor, a walk-up with big furniture implies a crane. The
+   * floor directly beneath it is the one ambiguous rung — worth asking about,
+   * not worth guessing — so raising this carries the question up with it rather
+   * than leaving every floor underneath billable.
+   */
   craneFromFloor: number;
   /** Below this floor, carrying is assumed feasible even if it is unpleasant. */
   neverBelowFloor: number;
@@ -98,6 +103,26 @@ export function assessCraneNeed(
     return none('קומת קרקע', 'Ground floor');
   }
 
+  // The lowest floor a crane is on the table at all, and the rung the whole
+  // ladder hangs from. Two rules meet here:
+  //
+  //   `neverBelowFloor` is a hard stop — one flight is carried, always, however
+  //   tight the stairwell. Nothing inferred below it books a crane; only the
+  //   customer answering Required does, and that was handled above.
+  //
+  //   The ask band is one rung, directly under `craneFromFloor`, so an ops
+  //   override moves the entire ladder instead of only changing the wording.
+  //   Anchoring it to the threshold rather than to "everything below it" is
+  //   what stops a `craneFromFloor` of 60 from billing floors 2–59 as an
+  //   ambiguous maybe.
+  const lowestCraneFloor = Math.max(rules.neverBelowFloor, rules.craneFromFloor - 1);
+  if (access.floor < lowestCraneFloor) {
+    return none(
+      `עד קומה ${lowestCraneFloor - 1} סוחבים במדרגות`,
+      `Floors up to ${lowestCraneFloor - 1} are carried up the stairs`,
+    );
+  }
+
   if (elevatorTakesFurniture(access.elevator)) {
     return none('יש מעלית שמתאימה לרהיטים', 'The lift takes furniture');
   }
@@ -113,7 +138,7 @@ export function assessCraneNeed(
   // A stairwell the customer has told us is tight, with furniture that will not
   // pass. This is the strongest signal available and it comes straight from the
   // person who lives there.
-  if (access.narrowStairwell && access.floor >= rules.neverBelowFloor) {
+  if (access.narrowStairwell) {
     return recommend(
       'חדר המדרגות צר מדי לרהיטים הגדולים',
       'The stairwell is too narrow for the large items',
@@ -132,8 +157,9 @@ export function assessCraneNeed(
     );
   }
 
-  // Floor 2, ordinary stairwell, big furniture. Genuinely could go either way,
-  // and the difference is several hundred shekels — so ask rather than guess.
+  // The rung below the threshold: ordinary stairwell, big furniture. Genuinely
+  // could go either way, and the difference is several hundred shekels — so ask
+  // rather than guess. Every floor under it returned above.
   return recommend(
     'ייתכן שיידרש מנוף — תלוי ברוחב חדר המדרגות',
     'A crane may be needed — it depends on the stairwell width',

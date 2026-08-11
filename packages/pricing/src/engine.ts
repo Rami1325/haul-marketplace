@@ -400,7 +400,11 @@ export function computeQuote(
   // --- floor, VAT, rounding -------------------------------------------------
   let netSubtotal = lines.reduce((acc, l) => acc + l.amount, 0);
 
-  const minimumNet = extractVat(card.minimumFare, card.vatRate).net;
+  // `minimumFare` is the one money field on the card stored VAT-inclusive — it
+  // is the figure the city advertises, not a component of a price, and it says
+  // so itself. So it is brought back to the net side here, where the running
+  // subtotal lives.
+  const minimumNet = extractVat(card.minimumFare.amount, card.vatRate).net;
   if (netSubtotal < minimumNet) {
     lines.push(
       toLine({

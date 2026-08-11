@@ -204,7 +204,93 @@ if (unresolved.length) {
 }
 
 // ---------------------------------------------------------------------------
-// 6. Emit
+// 6. Derive the first-screen grid
+// ---------------------------------------------------------------------------
+// 57 items carry `isCommon`. That flag was hand-set per row by the same authors
+// whose hand-set `craneCandidate` turned out to be noise, and 57 tiles is four
+// screens on a phone, so it cannot be the grid. It stays as the search-boost
+// pool — the candidate set — and the grid is DERIVED from the only evidence in
+// the repo about what a Tel Aviv home actually contains: the seven presets.
+//
+// Two rounds:
+//
+//   1. Every item a preset references. Fifteen items, each one an assertion by
+//      whoever wrote the presets that a real flat has this in it.
+//   2. The presets name ONE representative per family — one sofa, one box size,
+//      one bed. A customer with a single bed and small boxes then has to search
+//      for something the grid implies we don't handle, which is the exact
+//      failure the grid exists to prevent. So the remaining slots go to
+//      `isCommon` siblings sharing a preset item's `icon`, one family per pass,
+//      families ordered by how many presets they appear in.
+//
+// Ties between equally-frequent families break on category coverage — the
+// category holding the fewest tiles so far picks first — so the grid cannot
+// fill up with six sofas just because furniture happens to be the biggest
+// category in the catalog.
+//
+// Within a family, siblings are taken smallest first. The presets describe a
+// typical 2–5 room flat, so the representative sits at the top of its family's
+// size range; the home the presets do NOT describe is the studio and the single
+// room, and that is the one the second tile should cover.
+const FIRST_SCREEN_TARGET = 24;
+
+const presetFrequency = new Map();
+for (const p of presets) {
+  for (const l of p.lines) {
+    presetFrequency.set(l.catalogItemId, (presetFrequency.get(l.catalogItemId) ?? 0) + 1);
+  }
+}
+
+const firstScreen = new Set(presetFrequency.keys());
+const categoryTiles = new Map();
+const bumpCategory = (id) => {
+  const category = byId.get(id).category;
+  categoryTiles.set(category, (categoryTiles.get(category) ?? 0) + 1);
+};
+for (const id of firstScreen) bumpCategory(id);
+
+const families = [...new Set([...firstScreen].map((id) => byId.get(id).icon))]
+  .map((icon) => ({
+    icon,
+    frequency: Math.max(
+      ...[...firstScreen]
+        .filter((id) => byId.get(id).icon === icon)
+        .map((id) => presetFrequency.get(id)),
+    ),
+    taken: 0,
+    // Siblings the grid may still add: common, same family, not already a tile.
+    queue: [...byId.values()]
+      .filter((i) => i.icon === icon && i.isCommon && !firstScreen.has(i.id))
+      .sort((a, b) => a.volumeM3 - b.volumeM3 || a.id.localeCompare(b.id)),
+  }))
+  .filter((f) => f.queue.length > 0);
+
+while (firstScreen.size < FIRST_SCREEN_TARGET) {
+  const open = families.filter((f) => f.queue.length > 0);
+  if (open.length === 0) break;
+  // `taken` first is what makes this a round-robin: no family gets a second
+  // tile until every family has had a first one.
+  open.sort(
+    (a, b) =>
+      a.taken - b.taken ||
+      b.frequency - a.frequency ||
+      (categoryTiles.get(a.queue[0].category) ?? 0) -
+        (categoryTiles.get(b.queue[0].category) ?? 0) ||
+      a.icon.localeCompare(b.icon),
+  );
+  const family = open[0];
+  const picked = family.queue.shift();
+  family.taken += 1;
+  firstScreen.add(picked.id);
+  bumpCategory(picked.id);
+}
+
+for (const item of byId.values()) {
+  item.isFirstScreen = firstScreen.has(item.id);
+}
+
+// ---------------------------------------------------------------------------
+// 7. Emit
 // ---------------------------------------------------------------------------
 const items = [...byId.values()].sort((a, b) =>
   a.category === b.category ? a.id.localeCompare(b.id) : a.category.localeCompare(b.category),
@@ -228,4 +314,13 @@ console.log(`  added:          ${ADDITIONS.length}`);
 console.log(`  crane flags changed by the derived rule: ${craneChanged}`);
 console.log(`  crane candidates: ${craneCount}   common: ${commonCount}`);
 console.log(`  presets: ${presets.length}, all item ids resolve`);
+console.log(
+  `  first screen: ${firstScreen.size} tiles (${presetFrequency.size} from presets, ${firstScreen.size - presetFrequency.size} family siblings)`,
+);
+console.log(
+  '    ' +
+    [...firstScreen]
+      .map((id) => `${id}${presetFrequency.has(id) ? `×${presetFrequency.get(id)}` : ''}`)
+      .join(', '),
+);
 if (notes.length) console.log('\nnotes:\n  ' + notes.join('\n  '));

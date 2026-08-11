@@ -1,5 +1,12 @@
 import { z } from 'zod';
-import { AgorotSchema, BpsSchema, NonNegativeAgorotSchema } from '@haul/types';
+import {
+  AgorotSchema,
+  BpsSchema,
+  NonNegativeAgorotSchema,
+  addVat,
+  toDecimalString,
+  type Agorot,
+} from '@haul/types';
 
 /**
  * ---------------------------------------------------------------------------
@@ -90,6 +97,44 @@ export const WorkingMinutesConfigSchema = z.object({
   bufferBps: BpsSchema,
 });
 export type WorkingMinutesConfig = z.infer<typeof WorkingMinutesConfigSchema>;
+
+/**
+ * ---------------------------------------------------------------------------
+ * The advertised minimum fare
+ * ---------------------------------------------------------------------------
+ * Every other money field on the rate card is net: the engine builds the price
+ * net and adds VAT once at the end. This one is not a component of a price — it
+ * is the advertised figure itself, "החל מ-₪400", quoted VAT-inclusive because
+ * Israeli consumer prices are. The number an operator types here is the number
+ * the city advertises and the number a floored job actually charges; the engine
+ * extracts VAT from it to get the net floor it compares against.
+ *
+ * So it is stored as a figure that states its own side of VAT rather than as a
+ * bare integer, because a bare integer cannot. Converting it to net the way the
+ * rest of the card is converted extracts VAT twice and puts the real floor ~15%
+ * under the advertised one, silently, on exactly the smallest jobs — and a
+ * validator can only ever guess at that after the fact. The guess used to be
+ * "an advertised minimum is a whole number of shekels", which caught a
+ * net-stored ₪400 by luck (₪338.98) and waved through every advertised figure
+ * that is a multiple of 59: ₪590 gross is exactly ₪500 net, round, wrong, and
+ * invisible.
+ *
+ * `vatBasis` is not a setting. It is the writer stating the convention at the
+ * call site, where the mistake is made and where a reviewer can see it, so the
+ * parser rejects the bare number instead of a heuristic sniffing at it later.
+ */
+export const MinimumFareSchema = z.object({
+  /** Only `gross` is meaningful here — the point is that it must be said. */
+  vatBasis: z.literal('gross'),
+  /** The advertised, VAT-inclusive figure. */
+  amount: NonNegativeAgorotSchema,
+});
+export type MinimumFare = z.infer<typeof MinimumFareSchema>;
+
+/** The advertised minimum, from the figure the city advertises. */
+export function advertisedMinimum(gross: Agorot): MinimumFare {
+  return { vatBasis: 'gross', amount: gross };
+}
 
 export const RateCardSchema = z.object({
   cityId: z.string().min(1).max(64),
@@ -189,8 +234,13 @@ export const RateCardSchema = z.object({
   maxDemandFactorBps: BpsSchema,
 
   // --- floors and shaping ---------------------------------------------------
-  /** No job prices below this. Israeli movers all have a call-out minimum. */
-  minimumFare: NonNegativeAgorotSchema,
+  /**
+   * No job prices below this. Israeli movers all have a call-out minimum.
+   *
+   * The one money field on this card that is VAT-INCLUSIVE, which is why it is
+   * the only one that has to say so out loud. See `MinimumFareSchema`.
+   */
+  minimumFare: MinimumFareSchema,
   /**
    * Round the gross to this increment. ₪250 reads as a price; ₪247.83 reads as
    * machine output.
@@ -240,6 +290,19 @@ export const RateCardSchema = z.object({
 
   /** How long a locked price is held for an on-demand booking. */
   quoteValidityMinutes: z.number().int().min(1).max(10_080).default(30),
+
+  /**
+   * Hours before the slot inside which moving the booking counts as a late
+   * reschedule — one of the four `AdjustmentReason`s that may change a locked
+   * price.
+   *
+   * On the card rather than in the app because it is a term the customer is
+   * shown beside the number, in the Price Lock screen's "what could change
+   * this". A term a customer is held to has to be editable per city by the
+   * people who answer for it, without a deploy. Zero means a reschedule is
+   * always free.
+   */
+  rescheduleCutoffHours: z.number().int().min(0).max(72).default(2),
 });
 export type RateCard = z.infer<typeof RateCardSchema>;
 
@@ -263,7 +326,22 @@ export function validateRateCard(card: RateCard): string[] {
   if (card.maxDemandFactorBps > 15_000) {
     problems.push('demand factor cap above ×1.5 will read as surge pricing');
   }
-  if (card.minimumFare <= 0) problems.push('minimum fare must be positive');
+  if (card.minimumFare.amount <= 0) problems.push('minimum fare must be positive');
+  // The convention itself is no longer this function's problem — `vatBasis`
+  // states it and the parser enforces it. What is left is whether the figure
+  // looks like something a city would advertise: "from ₪400", never "from
+  // ₪338.98". A fraction here is the fingerprint of a net conversion that was
+  // relabelled gross on the way in, so gross the stored value back up and name
+  // the figure it was almost certainly converted from.
+  const minimum = card.minimumFare.amount;
+  if (minimum > 0 && minimum % 100 !== 0) {
+    const asGross = addVat(minimum, card.vatRate).gross;
+    problems.push(
+      asGross % 100 === 0
+        ? `minimum fare ${toDecimalString(minimum)} is the net of ${toDecimalString(asGross)} — this field holds the advertised VAT-inclusive figure, so store ${toDecimalString(asGross)}`
+        : `minimum fare ${toDecimalString(minimum)} is not a round figure — this field is the advertised VAT-inclusive minimum, not a net rate`,
+    );
+  }
   if (Object.keys(card.baseFareByVehicle).length === 0) {
     problems.push('no base fares defined');
   }

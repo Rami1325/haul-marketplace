@@ -5,13 +5,14 @@ import {
   ParkingSituation,
   StopKind,
   bps,
+  extractVat,
   percent,
   shekels,
   verifyBreakdown,
 } from '@haul/types';
 import { describe, expect, it } from 'vitest';
 import { computeQuote, type QuoteInput } from '../engine.js';
-import { validateRateCard } from '../rate-card.js';
+import { RateCardSchema, advertisedMinimum, validateRateCard } from '../rate-card.js';
 import {
   SMALL_MOVE,
   STOPS_GROUND_FLOOR,
@@ -110,7 +111,7 @@ describe('the minimum fare and rounding', () => {
       vehicleClassId: 'pickup',
       crewSize: 1,
     });
-    expect(result.lockedTotal).toBeGreaterThanOrEqual(TEST_RATE_CARD.minimumFare);
+    expect(result.lockedTotal).toBeGreaterThanOrEqual(TEST_RATE_CARD.minimumFare.amount);
   });
 
   it('rounds the gross to a clean figure', () => {
@@ -125,6 +126,41 @@ describe('the minimum fare and rounding', () => {
     const result = quote({ routedDistanceMeters: 7_777 });
     expect(verifyBreakdown(result.breakdown)).toEqual({ ok: true });
     expect(result.breakdown.grossTotal).toBe(result.lockedTotal);
+  });
+
+  it('charges exactly the figure the card advertises, VAT included', () => {
+    // `minimumFare` is the "החל מ-₪400" a customer was shown before they opened
+    // the app, not a net component of a price — so a job that lands on the
+    // floor pays that number itself. Storing the *net* of ₪400 here instead,
+    // which is the conversion every other money field on the card wants, has
+    // the engine extract VAT a second time and quietly lowers the floor.
+    const floorBound: QuoteInput = {
+      cityId: 'test-city',
+      manifest: manifest([['box_medium', 1]]),
+      stops: [...STOPS_GROUND_FLOOR],
+      routedDistanceMeters: 0,
+      vehicleClassId: 'pickup',
+      crewSize: 1,
+      schedule: WORKDAY_SCHEDULE,
+    };
+    const advertised = shekels(400);
+    const asGross = computeQuote(
+      floorBound,
+      { ...TEST_RATE_CARD, minimumFare: advertisedMinimum(advertised) },
+      TEST_CATALOG,
+    );
+    const asNet = computeQuote(
+      floorBound,
+      {
+        ...TEST_RATE_CARD,
+        minimumFare: advertisedMinimum(extractVat(advertised, TEST_RATE_CARD.vatRate).net),
+      },
+      TEST_CATALOG,
+    );
+
+    expect(asGross.breakdown.lines.some((l) => l.key === 'minimum_fare')).toBe(true);
+    expect(asGross.lockedTotal).toBe(advertised);
+    expect(asNet.lockedTotal).toBeLessThan(advertised);
   });
 });
 
@@ -318,7 +354,7 @@ describe('promotions come out of our margin, not the driver’s', () => {
       routedDistanceMeters: 800,
       promo: { code: 'MASSIVE', percentOffBps: bps(9_500) },
     });
-    expect(result.lockedTotal).toBeGreaterThanOrEqual(TEST_RATE_CARD.minimumFare);
+    expect(result.lockedTotal).toBeGreaterThanOrEqual(TEST_RATE_CARD.minimumFare.amount);
   });
 });
 
@@ -492,6 +528,64 @@ describe('rate card validation', () => {
         timeFactorBps: { ...TEST_RATE_CARD.timeFactorBps, workday: bps(30_000) },
       }),
     ).toContainEqual(expect.stringContaining('time factor'));
+  });
+
+  it('names the advertised figure when a net one was labelled gross anyway', () => {
+    // The label is a claim, and a claim can be wrong. What still gives it away
+    // is that an advertised minimum stops being a round figure: no mover
+    // advertises "from ₪338.98". Naming the ₪400 it was converted from is the
+    // whole diagnosis.
+    const netByMistake = extractVat(shekels(400), TEST_RATE_CARD.vatRate).net;
+    expect(
+      validateRateCard({ ...TEST_RATE_CARD, minimumFare: advertisedMinimum(netByMistake) }),
+    ).toContainEqual(expect.stringContaining('is the net of 400.00'));
+    expect(
+      validateRateCard({ ...TEST_RATE_CARD, minimumFare: advertisedMinimum(shekels(400)) }),
+    ).toEqual([]);
+  });
+
+  it('refuses a minimum fare that does not say which side of VAT it is on', () => {
+    // A divisibility heuristic only ever caught the net/gross slip by luck: it
+    // needed the division to leave a fraction of a shekel. Any advertised
+    // figure that is a multiple of 59 divides onto a whole shekel — ₪590 gross
+    // is exactly ₪500 net — and passed as a clean card while the engine
+    // extracted VAT a second time for a ₪500 floor against a published ₪590.
+    const netByMistake = extractVat(shekels(590), TEST_RATE_CARD.vatRate).net;
+    expect(netByMistake).toBe(shekels(500));
+    expect(netByMistake % 100, 'the blind spot the old heuristic had').toBe(0);
+
+    expect(RateCardSchema.safeParse({ ...TEST_RATE_CARD, minimumFare: netByMistake }).success).toBe(
+      false,
+    );
+    // Not because ₪500 is an odd figure to advertise: a bare number is refused
+    // whichever side of VAT it happens to be on. The card has to say.
+    expect(RateCardSchema.safeParse({ ...TEST_RATE_CARD, minimumFare: shekels(590) }).success).toBe(
+      false,
+    );
+  });
+
+  it('takes the minimum fare when the card states the convention', () => {
+    const stated = RateCardSchema.parse({
+      ...TEST_RATE_CARD,
+      minimumFare: { vatBasis: 'gross', amount: shekels(590) },
+    });
+    expect(stated.minimumFare.amount).toBe(shekels(590));
+    expect(validateRateCard(stated)).toEqual([]);
+  });
+});
+
+describe('terms a customer is shown live on the card', () => {
+  it('states a reschedule cutoff even on a card written before the field existed', () => {
+    // The Price Lock screen lists what could change the price, and a late
+    // reschedule is one of the four. A city that has not set the term still
+    // has to be able to state it.
+    expect(TEST_RATE_CARD.rescheduleCutoffHours).toBe(2);
+    expect(
+      RateCardSchema.parse({ ...TEST_RATE_CARD, rescheduleCutoffHours: 6 }).rescheduleCutoffHours,
+    ).toBe(6);
+    expect(RateCardSchema.safeParse({ ...TEST_RATE_CARD, rescheduleCutoffHours: -1 }).success).toBe(
+      false,
+    );
   });
 });
 

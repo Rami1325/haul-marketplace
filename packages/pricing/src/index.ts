@@ -13,4 +13,7 @@ export * from './rate-card.js';
 export * from './working-minutes.js';
 export * from './crane.js';
 export * from './engine.js';
+export * from './input-schema.js';
+export * from './canonical-input.js';
+export * from './to-quote.js';
 export { stableHash, canonicalJson } from './hash.js';

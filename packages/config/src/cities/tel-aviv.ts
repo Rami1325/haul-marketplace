@@ -1,5 +1,5 @@
 import { agorot, bps, extractVat, percent, shekels, type Agorot } from '@haul/types';
-import { RateCardSchema, type RateCard } from '@haul/pricing';
+import { RateCardSchema, advertisedMinimum, type RateCard } from '@haul/pricing';
 
 /**
  * ---------------------------------------------------------------------------
@@ -156,7 +156,16 @@ export const TEL_AVIV_RATE_CARD: RateCard = RateCardSchema.parse({
   maxDemandFactorBps: bps(12_500),
 
   // Many movers advertise "from ₪250–300"; single-item jobs run ₪250–650.
-  minimumFare: fromGross(400),
+  //
+  // `advertisedMinimum`, NOT `fromGross`, and it is the only money field on this
+  // card that states which side of VAT it sits on. This is the figure the city
+  // advertises — "החל מ-₪400" — and the engine extracts VAT from it rather than
+  // adding VAT to it. Converting it the way every other figure here is converted
+  // took VAT off twice and put the real floor at ₪338.98: not a number anybody
+  // would advertise, and not a number anybody would notice. A bare integer no
+  // longer parses at all, so the convention is stated here where it is written
+  // rather than guessed at afterwards by a validator.
+  minimumFare: advertisedMinimum(shekels(400)),
   // Round to the nearest ₪10. ₪2,847 reads as machine output.
   roundGrossToAgorot: 1_000,
   driverShareBps: bps(8_000),
@@ -214,6 +223,13 @@ export const TEL_AVIV_RATE_CARD: RateCard = RateCardSchema.parse({
   // thousand jobs.
   humanReviewThreshold: shekels(4_000),
   quoteValidityMinutes: 30,
+
+  // POLICY, not market data — no Israeli mover publishes a reschedule term, so
+  // there is nothing to source this against. 24 hours, because the crew and the
+  // truck are assigned the evening before: a slot given up inside a day cannot
+  // be refilled, and the driver eats it. Same reasoning that makes
+  // `cancellationFee` exist at all, one day earlier.
+  rescheduleCutoffHours: 24,
 });
 
 /**
