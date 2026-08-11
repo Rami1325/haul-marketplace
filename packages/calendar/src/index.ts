@@ -9,3 +9,5 @@
 export * from './hebrew.js';
 export * from './solar.js';
 export * from './israel.js';
+export * from './slots.js';
+export * from './labels.js';
