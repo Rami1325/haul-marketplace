@@ -56,12 +56,24 @@ importers:
       '@fontsource-variable/rubik':
         specifier: ^5.3.0
         version: 5.3.0
+      '@haul/config':
+        specifier: workspace:*
+        version: link:../../packages/config
+      '@haul/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@haul/db':
+        specifier: workspace:*
+        version: link:../../packages/db
       '@haul/types':
         specifier: workspace:*
         version: link:../../packages/types
       '@haul/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      drizzle-orm:
+        specifier: ^0.45.2
+        version: 0.45.2(postgres@3.4.9)
       next:
         specifier: ^16.3.0
         version: 16.3.0(@babel/core@7.29.7)(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -186,6 +198,9 @@ importers:
       '@haul/config':
         specifier: workspace:*
         version: link:../config
+      '@haul/contracts':
+        specifier: workspace:*
+        version: link:../contracts
       '@haul/payments':
         specifier: workspace:*
         version: link:../payments

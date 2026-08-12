@@ -18,16 +18,34 @@ const nextConfig: NextConfig = {
    * primitive. A package missing from this list fails at build time with a
    * syntax error inside `node_modules`, which reads like a broken dependency
    * rather than a missing line here.
+   *
+   * Transitively is the operative word, and the list is longer than the app's
+   * own imports suggest: the pages reach for `@haul/ui`, `@haul/contracts` and
+   * `@haul/db`, and behind those sit `@haul/config` (which `@haul/contracts`
+   * converts a draft against), `@haul/pricing` and `@haul/calendar` (which
+   * `@haul/config` is built on), and `@haul/types` under all of it.
    */
-  transpilePackages: ['@haul/types', '@haul/ui'],
+  transpilePackages: [
+    '@haul/calendar',
+    '@haul/config',
+    '@haul/contracts',
+    '@haul/db',
+    '@haul/pricing',
+    '@haul/types',
+    '@haul/ui',
+  ],
 
   /**
    * `postgres` opens real TCP sockets and loads its own native-ish plumbing.
    * Bundling it produces a driver that either fails to connect or connects from
-   * a copy the pool never sees. `@haul/db` is not imported yet; the entry is
-   * here because the first server action that reads a rate card will import it,
-   * and a bundler exclusion added at the same time as the first query is one
-   * nobody tests.
+   * a copy the pool never sees — and "the pool never sees it" is the failure
+   * that matters here, because `src/server/db.ts` caches one pool on
+   * `globalThis` and a second bundled copy of the driver would quietly open a
+   * second one per route.
+   *
+   * Load-bearing as of this commit rather than anticipatory: `@haul/db` is
+   * imported by `src/server/db.ts`, every booking page reaches it through the
+   * draft store, and the queries are real.
    */
   serverExternalPackages: ['postgres'],
 

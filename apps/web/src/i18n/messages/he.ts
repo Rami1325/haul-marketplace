@@ -24,6 +24,8 @@
  * the English catalog would then fail for the crime of saying something else.
  * ---------------------------------------------------------------------------
  */
+import type { DraftStep } from '@haul/contracts';
+
 export const he = {
   /** `<title>`. The product's own line, not a description of the page. */
   documentTitle: 'HAUL — משאית וזוג ידיים, במחיר שלא זז',
@@ -38,6 +40,30 @@ export const he = {
   priceLockNote: 'המחיר כולל מע"מ. רק ארבעה דברים יכולים לשנות אותו, וכולם מוצגים מראש.',
 
   startBooking: 'קבלת מחיר',
+
+  /**
+   * The eight booking steps, as headings.
+   *
+   * `satisfies Record<DraftStep, string>` is the point of the annotation: a
+   * ninth step added to `@haul/contracts` fails to compile here until it has a
+   * Hebrew heading, and `en.ts` then fails until it has an English one. A step
+   * that quietly renders an empty `<h1>` is the alternative, and it renders
+   * fine.
+   *
+   * These are questions rather than labels — "מה מעבירים?" not "פריטים" —
+   * because each screen asks the customer for exactly one thing, and a heading
+   * that names a noun makes the customer work out what is wanted from it.
+   */
+  bookingSteps: {
+    items: 'מה מעבירים?',
+    basket: 'הרשימה שלכם',
+    addresses: 'מאיפה, ולאן',
+    access: 'איך מגיעים לדלת',
+    when: 'מתי נגיע',
+    truck: 'משאית וצוות',
+    price: 'המחיר שלכם',
+    pay: 'תשלום',
+  } satisfies Record<DraftStep, string>,
 };
 
 /**

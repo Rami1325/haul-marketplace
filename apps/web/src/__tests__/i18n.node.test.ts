@@ -20,14 +20,39 @@ import { DEFAULT_LOCALE, isSupportedLocale, localeFromAcceptLanguage } from '@/i
  */
 
 /**
- * Both catalogs as plain records. `Messages` is a type alias over an object
- * literal, so TypeScript gives it an implicit index signature and this is a
- * widening rather than a cast.
+ * Both catalogs flattened to dotted leaf paths — `bookingSteps.items`.
+ *
+ * The catalog stopped being flat the moment the eight step headings arrived,
+ * and every assertion below is about leaves rather than top-level keys.
+ * Comparing `Object.keys` alone would call two catalogs identical because both
+ * happen to have a `bookingSteps`, whatever is or is not inside it — which is
+ * precisely the parity this suite exists to check.
+ *
+ * An empty branch is recorded as a leaf rather than disappearing, so a group
+ * that lost its contents fails the "non-empty string" assertion instead of
+ * quietly matching a group that still has them.
  */
-const HE: Record<string, string> = he;
-const EN: Record<string, string> = en;
+function flatten(catalog: object, prefix = ''): Record<string, unknown> {
+  const flat: Record<string, unknown> = {};
 
-const keysOf = (catalog: Record<string, string>): string[] => Object.keys(catalog).sort();
+  for (const [key, value] of Object.entries(catalog)) {
+    const path = prefix === '' ? key : `${prefix}.${key}`;
+    const isBranch = value !== null && typeof value === 'object' && !Array.isArray(value);
+
+    if (isBranch && Object.keys(value as object).length > 0) {
+      Object.assign(flat, flatten(value as object, path));
+    } else {
+      flat[path] = value;
+    }
+  }
+
+  return flat;
+}
+
+const HE = flatten(he);
+const EN = flatten(en);
+
+const keysOf = (catalog: Record<string, unknown>): string[] => Object.keys(catalog).sort();
 
 /** The Hebrew block. A `he` value with none of it is an English string. */
 const HEBREW_LETTER = /[֐-׿]/;
@@ -41,7 +66,7 @@ describe('he and en describe the same catalog', () => {
     for (const catalog of [HE, EN]) {
       for (const [key, value] of Object.entries(catalog)) {
         expect(typeof value, key).toBe('string');
-        expect(value.trim().length, key).toBeGreaterThan(0);
+        expect(String(value).trim().length, key).toBeGreaterThan(0);
       }
     }
   });
@@ -54,13 +79,13 @@ describe('he and en describe the same catalog', () => {
     // A catalog that has quietly become English is the failure mode of a
     // Hebrew-first product built by people who read English.
     for (const [key, value] of Object.entries(HE)) {
-      expect(HEBREW_LETTER.test(value), `${key} has no Hebrew in it`).toBe(true);
+      expect(HEBREW_LETTER.test(String(value)), `${key} has no Hebrew in it`).toBe(true);
     }
   });
 
   it('resolves a catalog for every locale the product claims to support', () => {
     for (const locale of SUPPORTED_LOCALES) {
-      expect(keysOf(messagesFor(locale))).toEqual(keysOf(HE));
+      expect(keysOf(flatten(messagesFor(locale)))).toEqual(keysOf(HE));
     }
   });
 });

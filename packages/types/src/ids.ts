@@ -15,6 +15,8 @@
  */
 
 export const ID_PREFIX = {
+  /** A booking in progress. Becomes a `job` if the customer finishes. */
+  draft: 'drf',
   job: 'job',
   quote: 'qte',
   offer: 'ofr',

@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@haul/config": "workspace:*",
+    "@haul/contracts": "workspace:*",
     "@haul/pricing": "workspace:*",
     "@haul/types": "workspace:*",
     "drizzle-orm": "^0.45.2",

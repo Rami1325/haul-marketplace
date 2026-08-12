@@ -101,6 +101,61 @@ do $$ begin
     check (stars between 1 and 5);
 exception when duplicate_object then null; end $$;
 
+-- === Booking draft invariants =============================================
+--
+-- `booking_drafts.version` is a copy of the `version` field inside the jsonb
+-- document beside it, kept as a column so a migration can find the old rows
+-- with an index instead of a scan. A copy that is free to disagree with its
+-- original is worse than no copy at all: the migration then rewrites the rows
+-- whose column says 1 and leaves the ones whose document says 1, and the two
+-- sets are not the same set.
+--
+-- Enforced here rather than in the writer because the writer is not the only
+-- thing that will ever write here — a backfill, an ops console session and a
+-- future non-TypeScript service all reach this table, and none of them will
+-- remember.
+do $$ begin
+  alter table booking_drafts
+    add constraint booking_drafts_version_matches_document
+    check ((draft ->> 'version')::int = version);
+exception when duplicate_object then null; end $$;
+
+-- `locale` is the same kind of copy and gets the same treatment. The column
+-- exists so the abandonment sweep can find the drafts it has to write to in
+-- Hebrew without parsing every document; the document carries it because a
+-- stored blob has to be interpretable on its own. A customer who switches
+-- language mid-flow moves both or neither.
+--
+-- `city_id` is deliberately NOT checked against `draft ->> 'cityId'`. That
+-- field is legitimately null on a draft — every answer on one is — and
+-- `toQuoteInput` already refuses a mismatch by name, with the draft in hand
+-- and a problem code a screen can act on. A constraint here would turn the
+-- same disagreement into a failed write with no such explanation.
+do $$ begin
+  alter table booking_drafts
+    add constraint booking_drafts_locale_matches_document
+    check ((draft ->> 'locale') = locale::text);
+exception when duplicate_object then null; end $$;
+
+-- The blob is a document. `jsonb` accepts a bare string, a number and `null`
+-- as perfectly valid JSON values, and any of them would parse as "a draft" for
+-- exactly as long as it takes something to read a field off it.
+do $$ begin
+  alter table booking_drafts
+    add constraint booking_drafts_document_is_object
+    check (jsonb_typeof(draft) = 'object');
+exception when duplicate_object then null; end $$;
+
+-- A session token is SHA-256 rendered as hex, and nothing else. The column is
+-- already `varchar(64)`, which stops a longer value and admits every shorter
+-- one — including the empty string, which is what a hashing step that silently
+-- returned nothing would write, and which would then match itself.
+do $$ begin
+  alter table booking_drafts
+    add constraint booking_drafts_session_hash_is_sha256
+    check (session_token_hash ~ '^[0-9a-f]{64}$');
+exception when duplicate_object then null; end $$;
+
 -- === The ledger balance trigger ===========================================
 --
 -- The invariant: every transaction's entries sum to zero. Checked with a

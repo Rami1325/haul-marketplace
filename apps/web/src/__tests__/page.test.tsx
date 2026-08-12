@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import type { ReactElement } from 'react';
 import { describe, expect, it } from 'vitest';
 import HomePage from '@/app/[locale]/page.js';
+import { en } from '@/i18n/messages/en.js';
 import { he } from '@/i18n/messages/he.js';
 import { MessagesProvider, useT } from '@/i18n/provider.js';
 
@@ -32,7 +33,16 @@ describe('the page', () => {
 
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('HAUL');
     expect(screen.getByText(he.tagline)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: he.startBooking })).toBeInTheDocument();
+    // A link, not a button: it is the only way into the booking flow, and a
+    // control that renders as a `<button>` with nothing bound to it is the
+    // failure this assertion exists to catch — it looks identical.
+    const start = screen.getByRole('link', { name: he.startBooking });
+    expect(start).toHaveAttribute('href', '/he/book');
+  });
+
+  it('sends the English page into the English flow', async () => {
+    render(await renderPage('en'));
+    expect(screen.getByRole('link', { name: en.startBooking })).toHaveAttribute('href', '/en/book');
   });
 
   it('shows the amount with its currency sign, not a bare number', async () => {

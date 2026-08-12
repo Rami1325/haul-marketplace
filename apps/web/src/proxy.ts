@@ -1,4 +1,11 @@
 import { NextResponse, type NextRequest } from 'next/server.js';
+import { isBookingPath } from '@/booking/paths.js';
+import {
+  BOOKING_SESSION_COOKIE,
+  bookingSessionCookie,
+  isSessionToken,
+  newSessionToken,
+} from '@/booking/session.js';
 import {
   DEFAULT_LOCALE,
   LOCALE_COOKIE,
@@ -62,11 +69,49 @@ function negotiate(request: NextRequest): Locale {
   return localeFromAcceptLanguage(request.headers.get('accept-language')) ?? DEFAULT_LOCALE;
 }
 
+/**
+ * Mint the booking session cookie, on the first booking navigation and nowhere
+ * else.
+ *
+ * **Only on `/…/book…`.** A reader on the home page gets no session and needs
+ * none: nothing has been started, there is nothing to key, and a tracking-shaped
+ * cookie handed to everyone who lands on the site is the thing every consent
+ * banner in Europe exists because of. The cookie is minted at the moment it
+ * becomes functional.
+ *
+ * **The request is mutated as well as the response**, and both are necessary.
+ * `response.cookies.set` tells the browser, which covers the *next* request;
+ * `request.cookies.set` plus forwarding the headers is what makes the token
+ * visible to the Server Components rendering *this* one. Without the second, a
+ * customer's first booking page runs with no session at all — and the write
+ * path throws by design when there is none.
+ *
+ * The token is a value, never a decision: this function does not look anything
+ * up, and a browser that already holds a well-formed one is left alone so a
+ * refresh mid-flow cannot orphan a draft by rotating the key to it.
+ */
+function withBookingSession(request: NextRequest): NextResponse {
+  if (!isBookingPath(request.nextUrl.pathname)) return NextResponse.next();
+  if (isSessionToken(request.cookies.get(BOOKING_SESSION_COOKIE)?.value)) {
+    return NextResponse.next();
+  }
+
+  const token = newSessionToken();
+  request.cookies.set(BOOKING_SESSION_COOKIE, token);
+  const response = NextResponse.next({ request: { headers: request.headers } });
+  response.cookies.set(bookingSessionCookie(token));
+  return response;
+}
+
 export function proxy(request: NextRequest): NextResponse {
   const { pathname } = request.nextUrl;
   const [, first] = pathname.split('/');
 
-  if (isSupportedLocale(first)) return NextResponse.next();
+  // Only on the localed path, which is every path by the time anything renders.
+  // Minting before the redirect below would set a cookie on a response the
+  // browser is about to replace, and then set it again on the request that
+  // replaces it.
+  if (isSupportedLocale(first)) return withBookingSession(request);
 
   const locale = negotiate(request);
   const url = request.nextUrl.clone();

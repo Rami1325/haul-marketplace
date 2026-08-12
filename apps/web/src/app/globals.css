@@ -66,6 +66,12 @@
  * flagged, or that an interpolated class compiles to nothing, is full of class
  * names written as counter-examples — and a scanner cannot tell a fixture from
  * an intention. Left in, this RTL-first product would ship the exact physical
- * rules whose only origin is a test asserting nobody may write one. */
-@source not '../__tests__/**';
-@source not '../../../../packages/ui/src/__tests__/**';
+ * rules whose only origin is a test asserting nobody may write one.
+ *
+ * The glob is `**​/__tests__/**` rather than the top-level `__tests__` this once
+ * named, because tests are not all in one place: `src/server/__tests__` holds
+ * the draft store's, next to the module it exercises, and a rule anchored to
+ * `src/__tests__` silently stopped covering them the moment that directory
+ * appeared. Any `__tests__`, at any depth, on both sides. */
+@source not '../**/__tests__/**';
+@source not '../../../../packages/ui/src/**/__tests__/**';

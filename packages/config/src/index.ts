@@ -16,6 +16,7 @@ export {
   isInServiceArea,
   serviceAreaFor,
   ServiceCoverage,
+  DEFAULT_CITY,
   DEFAULT_CITY_ID,
   type CityConfig,
   type ServiceAreaCheck,

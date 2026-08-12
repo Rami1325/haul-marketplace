@@ -21,4 +21,15 @@ export const en = {
     'VAT included. Only four things can change this, and all four are disclosed first.',
 
   startBooking: 'Get a price',
+
+  bookingSteps: {
+    items: 'What are you moving?',
+    basket: 'Your list',
+    addresses: 'From, and to',
+    access: 'Getting to the door',
+    when: 'When we arrive',
+    truck: 'Truck & crew',
+    price: 'Your price',
+    pay: 'Payment',
+  },
 } satisfies Messages;

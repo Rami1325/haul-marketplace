@@ -2,6 +2,7 @@ import { agorot } from '@haul/types';
 import { Button, Card, Money, Stack } from '@haul/ui';
 import { notFound } from 'next/navigation.js';
 import type { ReactElement } from 'react';
+import { bookingEntryPath } from '@/booking/paths.js';
 import { isSupportedLocale } from '@/i18n/locales.js';
 import { messagesFor } from '@/i18n/messages/index.js';
 
@@ -59,7 +60,19 @@ export default async function HomePage({ params }: PageProps): Promise<ReactElem
         </Stack>
       </Card>
 
-      <Button size="lg">{t.startBooking}</Button>
+      {/* `/book` rather than `/book/items`: it reads the draft this browser is
+          holding and routes onward, so the same button is "start" for a new
+          customer and "carry on" for one coming back — with no branch here that
+          could disagree with the one in `bookingPosition`.
+
+          A plain anchor, not `<Link>`. This is the entry to a flow rather than a
+          page inside one: the target renders nothing and redirects, so there is
+          no payload a prefetch could usefully warm, and prefetching on hover
+          would run a cookie read and a database query for every customer who
+          moved a mouse across the button. */}
+      <Button as="a" href={bookingEntryPath(locale)} size="lg">
+        {t.startBooking}
+      </Button>
     </main>
   );
 }

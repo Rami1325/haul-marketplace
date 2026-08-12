@@ -17,8 +17,12 @@
     "@fontsource-variable/heebo": "^5.3.0",
     "@fontsource-variable/roboto-mono": "^5.3.0",
     "@fontsource-variable/rubik": "^5.3.0",
+    "@haul/config": "workspace:*",
+    "@haul/contracts": "workspace:*",
+    "@haul/db": "workspace:*",
     "@haul/types": "workspace:*",
     "@haul/ui": "workspace:*",
+    "drizzle-orm": "^0.45.2",
     "next": "^16.3.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"

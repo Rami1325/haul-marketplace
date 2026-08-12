@@ -91,7 +91,18 @@ export const TEL_AVIV_CITY: CityConfig = {
 
 export const CITIES: readonly CityConfig[] = [TEL_AVIV_CITY];
 
-export const DEFAULT_CITY_ID = TEL_AVIV_CITY.id;
+/**
+ * The city a surface falls back to when nothing has selected one yet.
+ *
+ * Exported as the object and the id derived from it, rather than the other way
+ * round. A caller holding only `DEFAULT_CITY_ID` has to look the city back up
+ * and then deal with `cityById` returning `undefined` for the one id that
+ * cannot be missing — which is a non-null assertion in every consumer, or a
+ * throw at module scope in the unlucky ones.
+ */
+export const DEFAULT_CITY: CityConfig = TEL_AVIV_CITY;
+
+export const DEFAULT_CITY_ID = DEFAULT_CITY.id;
 
 export function cityById(id: string): CityConfig | undefined {
   return CITIES.find((city) => city.id === id);
